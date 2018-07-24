@@ -17,7 +17,7 @@ defmodule CrossywordoWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
-    get "/cw/:extra_data", HelloController, :show_me
+    get "/room/:extra_data", HelloController, :show_me
   end
 
   # Other scopes may use custom stacks.
