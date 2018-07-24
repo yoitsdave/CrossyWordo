@@ -12,8 +12,8 @@ defmodule Crossywordo.Application do
       supervisor(Crossywordo.Repo, []),
       # Start the endpoint when the application starts
       supervisor(CrossywordoWeb.Endpoint, []),
-      # Start your own worker by calling: Crossywordo.Worker.start_link(arg1, arg2, arg3)
-      # worker(Crossywordo.Worker, [arg1, arg2, arg3]),
+      # Start the Table Supervisor
+      supervisor(Crosswordo.Table, [%{}]),
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
