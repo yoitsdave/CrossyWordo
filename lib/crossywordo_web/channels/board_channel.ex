@@ -1,9 +1,8 @@
 defmodule CrossywordoWeb.BoardChannel do
   use Phoenix.Channel
 
-  def join("join:empty", msg, socket) do
-    IO.puts inspect msg
-    {:ok, socket}
+  def join("join:empty", %{"name" => name}, socket) do
+    {:ok, assign(socket, :name, name)}
   end
 
   def join("join:" <> _other_board, _params, _socket) do
@@ -13,7 +12,8 @@ defmodule CrossywordoWeb.BoardChannel do
   #broadcast! calls handle_out for each client, in the event they
   #must be treated differently
   def handle_in("message_in", %{"contents" => body}, socket) do
-     broadcast! socket, "notice", %{contents: body}
-     {:received, socket}
+     msg = socket.assigns[:name] <> ": " <> body
+     broadcast! socket, "notice", %{contents: msg}
+     {:noreply, socket}
   end
 end

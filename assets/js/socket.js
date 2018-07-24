@@ -54,7 +54,8 @@ socket.connect()
 var url = window.location.href.split("/");
 
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("join:" + url[url.length - 1], {})
+let channel = socket.channel("join:" + url[url.length - 1],
+                            {name: prompt("Please Enter Your Name", "Bob")})
 
 // attach to chat input and message output in html
 let chatInput = document.querySelector("#chat-input")
