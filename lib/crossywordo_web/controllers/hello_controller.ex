@@ -1,7 +1,7 @@
 defmodule CrossywordoWeb.HelloController do
   use CrossywordoWeb, :controller
 
-  def index(conn, _params) do
-    render conn, "index.html"
+  def show_me(conn, %{"extra_data" => messenger}) do
+    render conn, "show.html", messenger: messenger
   end
 end
