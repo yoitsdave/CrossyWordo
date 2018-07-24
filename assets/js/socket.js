@@ -1,6 +1,3 @@
-// NOTE: The contents of this file will only be executed if
-// you uncomment its entry in "assets/js/app.js".
-
 // To use Phoenix channels, the first step is to import Socket
 // and connect at the socket path in "lib/web/endpoint.ex":
 import {Socket} from "phoenix"
@@ -53,10 +50,34 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 
 socket.connect()
 
+// get url, to call room name
+var url = window.location.href.split("/");
+
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("topic:subtopic", {})
+let channel = socket.channel("join:" + url[url.length - 1], {})
+
+// attach to chat input and message output in html
+let chatInput = document.querySelector("#chat-input")
+let messagesContainer = document.querySelector("#messages")
+
+// add listener for enter keypress in the input to export new_msg signal
+chatInput.addEventListener("keypress", event => {
+  if(event.keyCode === 13){
+    channel.push("message_in", {contents: chatInput.value})
+    chatInput.value = ""
+  }
+})
+
+// add listener for new_msg signal, and export to message box
+channel.on("notice", payload => {
+  let messageItem = document.createElement("li")
+  messageItem.innerText = `[${Date()}] ${payload.contents}`
+  messagesContainer.appendChild(messageItem)
+})
+
+
+// join channel and export its object as default
 channel.join()
   .receive("ok", resp => { console.log("Joined successfully", resp) })
   .receive("error", resp => { console.log("Unable to join", resp) })
-
 export default socket

@@ -1,5 +1,2 @@
-<div class="jumbotron">
-  <h2> Hi there! The second part of your path was <%= @messenger %> </h2>
-  <h4> Note that that is <%= @messenger |> String.length %> letters long, and
-  <%= @messenger |> byte_size %> bytes long </h4>
-</div>
+<div id="messages"></div>
+<input id="chat-input" type="text"></input>
