@@ -1,0 +1,7 @@
+<div class="jumbotron">
+  <h2>Welcome to room <%= @room_name %> </h2>
+  <h4>this room can be found at pid <%= inspect @pid %> </h2>
+</div>
+
+<div id="messages"></div>
+<input id="chat-input" type="text"></input>

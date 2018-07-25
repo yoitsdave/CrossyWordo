@@ -13,13 +13,14 @@ defmodule Crossywordo.Application do
       # Start the endpoint when the application starts
       supervisor(CrossywordoWeb.Endpoint, []),
       # Start the Table Supervisor
-      supervisor(Crosswordo.Table, [%{}]),
+      supervisor(Crossywordo.Table, [%{}]),
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Crossywordo.Supervisor]
-    Supervisor.start_link(children, opts)
+    {:ok, pid} = Supervisor.start_link(children, opts)
+    {:ok, pid}
   end
 
   # Tell Phoenix to update the endpoint configuration
