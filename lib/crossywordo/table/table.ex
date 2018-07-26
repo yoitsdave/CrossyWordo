@@ -8,7 +8,7 @@ defmodule Crossywordo.Table do
   end
 
   def init(_arg) do
-    Supervisor.init([], strategy: :one_for_one)
+    Supervisor.init([], strategy: :one_for_one, restart: :temporary)
   end
 
   def start_board(args) do

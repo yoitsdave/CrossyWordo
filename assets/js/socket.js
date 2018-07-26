@@ -54,25 +54,25 @@ socket.connect()
 var url = window.location.href.split("/");
 
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("join:" + url[url.length - 1],
+let channel = socket.channel("board:" + url[url.length - 1],
                             {name: prompt("Please Enter Your Name", "Bob")})
 
 // attach to chat input and message output in html
 let chatInput = document.querySelector("#chat-input")
 let messagesContainer = document.querySelector("#messages")
 
-// add listener for enter keypress in the input to export new_msg signal
+// add listener for enter keypress in the input to export call_in signal
 chatInput.addEventListener("keypress", event => {
   if(event.keyCode === 13){
-    channel.push("message_in", {contents: chatInput.value})
+    channel.push("call_in", {call: chatInput.value})
     chatInput.value = ""
   }
 })
 
-// add listener for new_msg signal, and export to message box
+// add listener for notice signal, and export to message box
 channel.on("notice", payload => {
   let messageItem = document.createElement("li")
-  messageItem.innerText = `[${Date()}] ${payload.contents}`
+  messageItem.innerText = `${payload.contents}`
   messagesContainer.appendChild(messageItem)
 })
 

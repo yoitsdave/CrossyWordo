@@ -2,7 +2,7 @@ defmodule CrossywordoWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-   channel "join:*", CrossywordoWeb.BoardChannel
+   channel "board:*", CrossywordoWeb.BoardChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
