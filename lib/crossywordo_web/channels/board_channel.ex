@@ -8,9 +8,16 @@ defmodule CrossywordoWeb.BoardChannel do
     {:ok, socket |> assign(:display_name, display_name)}
   end
 
+  #@impl true
+  #def terminate(_message, socket) do
+  #  GenServer.stop({:global, socket.topic}, :empty)
+  #end
+
   @impl true
-  def handle_info(term, socket) do
-    broadcast!(socket, "notice", %{contents: term})
+  def handle_info(received, socket) do
+    [type | contents] = String.split(received, ":")
+    broadcast!(socket, type, %{contents: contents})
+    broadcast!(socket, "notice", %{contents: received})
     {:noreply, socket}
   end
 
