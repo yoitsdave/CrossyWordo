@@ -751,7 +751,7 @@ if __name__ == "__main__":
     acrosses = []
     for clue in loaded_nums.across:
         #add clue to across list
-        acrosses.append(clue['clue'])
+        acrosses.append([clue['num'], clue['clue']])
 
         #set label of first cell
         board[clue['cell']]['label'] = clue['num']
@@ -764,7 +764,7 @@ if __name__ == "__main__":
     downs = []
     for clue in loaded_nums.down:
         #add clue to across list
-        downs.append(clue['clue'])
+        acrosses.append([clue['num'], clue['clue']])
 
         #set num of first cell
         board[clue['cell']]['label'] = clue['num']
