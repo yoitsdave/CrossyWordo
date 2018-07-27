@@ -779,7 +779,7 @@ if __name__ == "__main__":
         loaded_rebus = loaded_puz.rebus()
         for square in loaded_rebus.get_rebus_squares():
             board[square][0] = loaded_rebus.get_rebus_solution(square)
-    
+
     if loaded_puz.has_markup():
         loaded_markup = loaded_puz.markup()
         for square in loaded_markup.get_markup_squares():
@@ -788,7 +788,7 @@ if __name__ == "__main__":
     out_list = {'width': loaded_puz.width,
                 'height': loaded_puz.height,
                 'across_clues': acrosses,
-                'down_cluse': downs,
+                'down_clues': downs,
                 'board': board}
 
     print(json.dumps(out_list))
