@@ -21,16 +21,20 @@ defmodule Crossywordo.Board do
     IO.puts "room " <> inspect(board_name) <> " has been started"
 
     {:ok, body} = File.read("lib/crossywordo/puzpy/example.json")
-    current_board = Poison.decode!(body) |>
-                    Map.update!("board", fn state ->
-                                           state |>
-                                           Enum.map(fn square ->
-                                                      [" "] ++ square
-                                                    end) |>
-                                           List.to_tuple
-                                         end)
-
-    {:ok, current_board}
+    current = Poison.decode!(body) |>
+              Map.update!("board", fn state ->
+                                   state |>
+                                   Enum.map(fn square ->
+                                              Map.put(square,
+                                              "current",
+                                              case Map.get(square, "ans") do
+                                                "." -> "."
+                                                _other -> " "
+                                              end)
+                                            end) |>
+                                   List.to_tuple
+                                 end)
+    {:ok, current}
   end
 
   @impl true
@@ -38,12 +42,23 @@ defmodule Crossywordo.Board do
     case call_type do
       #"check" -> check(from, board)
       #"get_clues" -> get_clues(rest, from, board)
-      #"get_state" -> get_state(rest, from, board)
+      "get_square_states" -> get_square_states(rest, from, board)
       #"kill" -> kill(rest, from, board)
       #"reveal" -> reveal(rest, from, board)
       "say_hi" -> say_hi(rest, from, board)
       #"set_letter" -> set_letter(rest, from, board)
     end
+  end
+
+  def get_square_states(rest, {from_pid, _term}, board) do
+    vals = rest |>
+           Enum.map(fn square -> {square_num, _other} = Integer.parse(square)
+                      Map.get(board, "board") |>
+                      elem(square_num) |>
+                      Map.get("current")
+                    end)
+    send(from_pid, inspect vals)
+    {:reply, :ok, board}
   end
 
   def say_hi(_rest, {from_pid, _term}, board) do

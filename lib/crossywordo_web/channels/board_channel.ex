@@ -10,7 +10,6 @@ defmodule CrossywordoWeb.BoardChannel do
 
   @impl true
   def handle_info(term, socket) do
-    IO.puts("message \"" <> term <> "\" received")
     broadcast!(socket, "notice", %{contents: term})
     {:noreply, socket}
   end
