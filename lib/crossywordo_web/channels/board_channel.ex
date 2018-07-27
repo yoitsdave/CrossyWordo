@@ -3,13 +3,16 @@ defmodule CrossywordoWeb.BoardChannel do
 
   @impl true
   def join(board_name, %{"name" => display_name}, socket) do
+    IO.puts("got call for board " <> board_name)
     {:ok, my_board_pid} = Crossywordo.Table.get_board(%{name: {:global, board_name}})
+    called = GenServer.call(my_board_pid, :link)
     {:ok, socket |> assign(:display_name, display_name)}
   end
 
-  #TODO implement this properly
   @impl true
-  def handle_info(_term, socket) do
+  def handle_info(term, socket) do
+    IO.puts("message \"" <> term <> "\" received")
+    broadcast!(socket, "notice", %{contents: term})
     {:noreply, socket}
   end
 
@@ -17,8 +20,7 @@ defmodule CrossywordoWeb.BoardChannel do
   #must be treated differently
   @impl true
   def handle_in("call_in", %{"call" => call}, socket) do
-     msg = GenServer.call({:global, socket.topic}, String.to_atom call)
-     broadcast! socket, "notice", %{contents: call <> ": " <> msg}
+     GenServer.call({:global, socket.topic}, String.to_atom call)
      {:noreply, socket}
   end
 end

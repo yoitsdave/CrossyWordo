@@ -52,13 +52,15 @@ defmodule Crossywordo.Board do
     end
   end
 
-  #TODO implement this properly
+  #THIS MUST BE CALLED BEFORE ANYTHING ELSE
   def link({from_pid, _term}, board) do
-    {:reply, "Linked", Map.update!(board, :channel, fn _current -> from_pid end)}
+    new_board = Map.update!(board, :channel, fn _current -> from_pid end)
+    IO.puts("linked board " <> inspect(self()) <> " with channel " <> inspect(from_pid))
+    {:reply, :ok, new_board}
   end
 
-  def say_hi({from_pid, _term}, board) do
-    send(from_pid, "hello there!")
-    {:reply, "Said hi!", board}
+  def say_hi({_from_pid, _term}, board) do
+    send(board.channel, "hello there!")
+    {:reply, :ok, board}
   end
 end
