@@ -12,7 +12,8 @@ defmodule Crossywordo.Table do
   end
 
   def start_board(args) do
-    child = Supervisor.child_spec Crossywordo.Board.child_spec(args), id: args.name
+    child = Supervisor.child_spec(Crossywordo.Board.child_spec(args),
+                                  id: args.name)
     Supervisor.start_child(__MODULE__, child)
   end
 

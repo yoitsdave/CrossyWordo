@@ -4,8 +4,7 @@ defmodule CrossywordoWeb.BoardChannel do
   @impl true
   def join(board_name, %{"name" => display_name}, socket) do
     IO.puts("got call for board " <> board_name)
-    {:ok, my_board_pid} = Crossywordo.Table.get_board(%{name: {:global, board_name}})
-    called = GenServer.call(my_board_pid, :link)
+    {:ok, _my_board_pid} = Crossywordo.Table.get_board(%{name: {:global, board_name}})
     {:ok, socket |> assign(:display_name, display_name)}
   end
 
@@ -20,7 +19,7 @@ defmodule CrossywordoWeb.BoardChannel do
   #must be treated differently
   @impl true
   def handle_in("call_in", %{"call" => call}, socket) do
-     GenServer.call({:global, socket.topic}, String.to_atom call)
+     GenServer.call({:global, socket.topic}, call |> String.split(" "))
      {:noreply, socket}
   end
 end

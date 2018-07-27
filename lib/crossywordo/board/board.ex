@@ -26,41 +26,32 @@ defmodule Crossywordo.Board do
   def init(%{:name => board_name} = _args) do
     IO.puts "room " <> inspect(board_name) <> " has been started"
 
-    {:ok, body} = File.read("assets/vendor/example.json")
+    {:ok, body} = File.read("lib/crossywordo/puzpy/example.json")
     current_board = Poison.decode!(body) |>
                     atomize_keys() |>
                     Map.update!(:board, fn state ->
                                          Enum.map(state, &atomize_keys(&1)) |>
                                          List.to_tuple
                                         end) |>
-                    Map.put(:current, " ") |>
-                    Map.put(:channel, :none)
+                    Map.put(:current, " ")
     {:ok, current_board}
   end
 
   @impl true
-  def handle_call(call_type, from, board) do
+  def handle_call([call_type | rest], from, board) do
     case call_type do
-      #:check -> check(from, board)
-      #:get_clues -> get_clues(from, board)
-      #:get_state -> get_state(from, board)
-      #:kill -> kill(from, board)
-      #:reveal -> reveal(from, board)
-      :say_hi -> say_hi(from, board)
-      #:set_letter -> set_letter(from, board)
-      :link -> link(from, board)
+      #"check" -> check(from, board)
+      #"get_clues" -> get_clues(rest, from, board)
+      #"get_state" -> get_state(rest, from, board)
+      #"kill" -> kill(rest, from, board)
+      #"reveal" -> reveal(rest, from, board)
+      "say_hi" -> say_hi(rest, from, board)
+      #"set_letter" -> set_letter(rest, from, board)
     end
   end
 
-  #THIS MUST BE CALLED BEFORE ANYTHING ELSE
-  def link({from_pid, _term}, board) do
-    new_board = Map.update!(board, :channel, fn _current -> from_pid end)
-    IO.puts("linked board " <> inspect(self()) <> " with channel " <> inspect(from_pid))
-    {:reply, :ok, new_board}
-  end
-
-  def say_hi({_from_pid, _term}, board) do
-    send(board.channel, "hello there!")
+  def say_hi(_rest, {from_pid, _term}, board) do
+    send(from_pid, "hello there!")
     {:reply, :ok, board}
   end
 end
