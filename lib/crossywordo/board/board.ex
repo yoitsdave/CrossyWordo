@@ -23,10 +23,13 @@ defmodule Crossywordo.Board do
     {:ok, body} = File.read("lib/crossywordo/puzpy/example.json")
     current_board = Poison.decode!(body) |>
                     Map.update!("board", fn state ->
-                                         state |>
-                                         List.to_tuple
-                                        end) |>
-                    Map.put(:current, " ")
+                                           state |>
+                                           Enum.map(fn square ->
+                                                      [" "] ++ square
+                                                    end) |>
+                                           List.to_tuple
+                                         end)
+
     {:ok, current_board}
   end
 
