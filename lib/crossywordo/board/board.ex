@@ -16,21 +16,14 @@ defmodule Crossywordo.Board do
   # also note - board is a tuple to facilitate easy access and due to
   # its fixed size
 
-  defp atomize_keys(map) do
-    Map.new(map, fn {key, value} ->
-                   {String.to_atom(key), value}
-                 end)
-  end
-
   @impl true
   def init(%{:name => board_name} = _args) do
     IO.puts "room " <> inspect(board_name) <> " has been started"
 
     {:ok, body} = File.read("lib/crossywordo/puzpy/example.json")
     current_board = Poison.decode!(body) |>
-                    atomize_keys() |>
-                    Map.update!(:board, fn state ->
-                                         Enum.map(state, &atomize_keys(&1)) |>
+                    Map.update!("board", fn state ->
+                                         state |>
                                          List.to_tuple
                                         end) |>
                     Map.put(:current, " ")
