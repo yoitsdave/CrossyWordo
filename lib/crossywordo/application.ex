@@ -13,7 +13,7 @@ defmodule Crossywordo.Application do
       # Start the endpoint when the application starts
       supervisor(CrossywordoWeb.Endpoint, []),
       # Start the Table Supervisor
-      supervisor(Crossywordo.Table, [%{}]),
+      # supervisor(Crossywordo.Table, [%{}]),
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
