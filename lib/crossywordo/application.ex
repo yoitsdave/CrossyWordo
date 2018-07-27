@@ -9,11 +9,9 @@ defmodule Crossywordo.Application do
     # Define workers and child supervisors to be supervised
     children = [
       # Start the Ecto repository
-      supervisor(Crossywordo.Repo, []),
+      #supervisor(Crossywordo.Repo, []),
       # Start the endpoint when the application starts
       supervisor(CrossywordoWeb.Endpoint, []),
-      # Start the Table Supervisor
-      # supervisor(Crossywordo.Table, [%{}]),
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
