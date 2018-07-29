@@ -1,3 +1,5 @@
+<script src="<%= static_path(@conn, "/vendor/socket.js") %>"></script>
+
 <div class="jumbotron">
   <h2>Welcome to room <%= @room_name %> </h2>
 </div>

@@ -2,7 +2,10 @@ defmodule Crossywordo.Board do
   use GenServer
 
   def start_link(%{:name => board_name} = args) do
-    GenServer.start_link(__MODULE__, args, name: board_name)
+    case GenServer.start_link(__MODULE__, args, name: board_name) do
+      {:ok, pid} -> {:ok, pid}
+      {:error, {:already_started, pid}} -> {:ok, pid}
+    end
   end
 
   defp clean(any) do
@@ -35,8 +38,7 @@ defmodule Crossywordo.Board do
                                                   "." -> "."
                                                   _other -> " "
                                                 end)
-                                              end) |>
-                                     List.to_tuple
+                                              end)
                                    end)
     {:ok, current}
   end
@@ -52,7 +54,7 @@ defmodule Crossywordo.Board do
       "get_clues" -> get_clues(rest, from, board)
       "get_states" -> get_states(rest, from, board)
       "say_hi" -> say_hi(rest, from, board)
-      #"set_letter" -> set_letter(rest, from, board)
+      "set_letter" -> set_letter(rest, from, board)
 
       other -> failed_call([other | rest], from, board)
     end
@@ -65,9 +67,11 @@ defmodule Crossywordo.Board do
   end
 
   def get_states(_rest, {from_pid, _term}, board) do
+    tuple_board = Map.get(board, "board") |> List.to_tuple
+
     vals = 0..Map.get(board, "width")*Map.get(board, "height")-1 |>
            Enum.map(fn square_num ->
-                      Map.get(board, "board") |>
+                      tuple_board |>
                       elem(square_num)
                     end)
     IO.puts(clean vals)
@@ -78,6 +82,20 @@ defmodule Crossywordo.Board do
   def say_hi(_rest, {from_pid, _term}, board) do
     send(from_pid, "greetings:hello there!")
     {:reply, :ok, board}
+  end
+
+  def set_letter([square_num, val], {from_pid, _term}, board) do
+    new_board = Map.update!(board, "board",
+                              fn old_board ->
+                                old_board |>
+                                List.update_at(String.to_integer(square_num),
+                                fn square ->
+                                  square |>
+                                  Map.update!("current", fn _x -> val end)
+                                end)
+                              end)
+    send(from_pid, "update:"<>"["<>square_num<>","<>val<>"]")
+    {:reply, :ok, new_board}
   end
 
   def failed_call(call_data, {from_pid, _term}, board) do

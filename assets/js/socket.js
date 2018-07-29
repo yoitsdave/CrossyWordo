@@ -1,3 +1,5 @@
+import "phoenix_html"
+
 // To use Phoenix channels, the first step is to import Socket
 // and connect at the socket path in "lib/web/endpoint.ex":
 import {Socket} from "phoenix"
@@ -55,7 +57,7 @@ var url = window.location.href.split("/");
 
 // Now that you are connected, you can join channels with a topic:
 let channel = socket.channel("board:" + url[url.length - 1],
-                            {name: prompt("Please Enter Your Name", "Bob")})
+                            {name: "Bob"})
 
 // attach to chat input and message output in html
 let chatInput = document.querySelector("#chat-input")
