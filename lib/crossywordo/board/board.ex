@@ -26,8 +26,9 @@ defmodule Crossywordo.Board do
   @impl true
   def init(%{:name => board_name} = _args) do
     IO.puts "room " <> clean(board_name) <> " has been started"
+    {:global, "board:" <> file_name} = board_name
 
-    {:ok, body} = File.read("lib/crossywordo/puzpy/example.json")
+    {:ok, body} = File.read("boards/#{file_name}.json.puz")
     current = Poison.decode!(body) |>
               Map.update!("board", fn state ->
                                      state |>

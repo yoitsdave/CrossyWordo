@@ -1,1 +1,6 @@
 This is my index!
+
+<%= form_for @conn, "/room/empty", [multipart: true], fn f -> %>
+  <%= file_input(f, "submit", class: "file-in") %>
+  <%= submit "Submit", class: "submit-btn" %>
+<% end %>

@@ -791,4 +791,6 @@ if __name__ == "__main__":
                 'down_clues': downs,
                 'board': board}
 
-    print(json.dumps(out_list))
+
+    print("came to end of file", sys.argv, file=sys.stderr)
+    print(json.dumps(out_list), file=open(sys.argv[2], "w"))

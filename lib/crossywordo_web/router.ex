@@ -17,6 +17,7 @@ defmodule CrossywordoWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", IndexController, :index
+    post "/room/:room_name", RoomController, :join_room
     get "/room/:room_name", RoomController, :join_room
   end
 

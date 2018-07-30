@@ -1,10 +1,11 @@
 defmodule Crossywordo.Puz do
   use Arc.Definition
+  def __storage, do: Arc.Storage.Local
 
   # Include ecto support (requires package arc_ecto installed):
   # use Arc.Ecto.Definition
 
-  @versions [:original]
+  @versions [:original, :jsond]
 
   # To add a thumbnail version:
   # @versions [:original, :thumb]
@@ -19,15 +20,16 @@ defmodule Crossywordo.Puz do
   #   ~w(.jpg .jpeg .gif .png) |> Enum.member?(Path.extname(file.file_name))
   # end
 
-  # Define a thumbnail transformation:
-  # def transform(:thumb, _) do
-  #   {:convert, "-strip -thumbnail 250x250^ -gravity center -extent 250x250 -format png", :png}
-  # end
+  def transform(:jsond, _) do
+    IO.puts "transform called"
+     {"python", fn i, o -> ["lib/crossywordo/puzpy/puz.py", i, o] end}
+   end
 
   # Override the persisted filenames:
-  # def filename(version, _) do
-  #   version
-  # end
+  def filename(_version, {_file, scope}) do
+    IO.puts scope
+    scope <> ".json"
+   end
 
   # Override the storage directory:
   # def storage_dir(version, {file, scope}) do
