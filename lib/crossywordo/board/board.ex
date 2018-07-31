@@ -28,7 +28,8 @@ defmodule Crossywordo.Board do
     IO.puts "room " <> clean(board_name) <> " has been started"
     {:global, "board:" <> file_name} = board_name
 
-    {:ok, body} = File.read("boards/#{file_name}.json.puz")
+    {:ok, body} = File.read(List.to_string(:code.priv_dir(:crossywordo))
+                            <> "/boards/#{file_name}.json.puz")
     current = Poison.decode!(body) |>
               Map.update!("board", fn state ->
                                      state |>

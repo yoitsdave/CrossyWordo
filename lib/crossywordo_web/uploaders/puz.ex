@@ -21,8 +21,10 @@ defmodule Crossywordo.Puz do
   # end
 
   def transform(:jsond, _) do
-    IO.puts "transform called"
-     {"python", fn i, o -> ["lib/crossywordo/puzpy/puz.py", i, o] end}
+    IO.puts "transform called" <> inspect :code.priv_dir(:crossywordo)
+    {"python", fn i, o -> [List.to_string(:code.priv_dir(:crossywordo))
+                            <> "/puzpy/puz.py",
+                           i, o] end}
    end
 
   # Override the persisted filenames:
@@ -32,9 +34,9 @@ defmodule Crossywordo.Puz do
    end
 
   # Override the storage directory:
-  # def storage_dir(version, {file, scope}) do
-  #   "uploads/user/avatars/#{scope.id}"
-  # end
+  def storage_dir(_version, {_file, _scope}) do
+     List.to_string(:code.priv_dir(:crossywordo)) <> "/boards/"
+  end
 
   # Provide a default URL if there hasn't been a file uploaded
   # def default_url(version, scope) do
