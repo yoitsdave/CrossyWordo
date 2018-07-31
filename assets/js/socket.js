@@ -167,6 +167,10 @@ export var App = {
       window.channel.push("call_in", {call: update});
     }
 
+    function updateClue(){
+      
+    }
+
     function main() {
       window.board_set = false;
 

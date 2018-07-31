@@ -69,6 +69,3 @@ config :logger, level: :info
 #
 #     config :crossywordo, CrossywordoWeb.Endpoint, server: true
 #
-
-# Finally import the config/prod.secret.exs
-# which should be versioned separately.

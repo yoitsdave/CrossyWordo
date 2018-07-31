@@ -1,4 +1,6 @@
-﻿import functools
+from __future__ import print_function
+
+import functools
 import operator
 import math
 import string
@@ -22,7 +24,6 @@ if PY3:
     str = str
     range = range
 else:
-    from __future__ import print_function
     str = unicode
     range = xrange
 

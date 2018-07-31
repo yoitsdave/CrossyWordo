@@ -5,7 +5,13 @@
   margin: 0 auto;
 }
 
-div {}
+#clue {
+  border: 1px solid black;
+  width: 82vmin;
+  height: 6vmin;
+  margin: 0 auto;
+  font-size: 4vmin;
+}
 
 .filled {
   position: relative;
