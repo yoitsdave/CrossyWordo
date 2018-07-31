@@ -16,7 +16,18 @@ use Mix.Config
 config :crossywordo, CrossywordoWeb.Endpoint,
   load_from_system_env: true,
   url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  server: true,
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  secret_key_base: "${SECRET_KEY_BASE}"
+
+config :libcluster,
+  topologies: [
+    k8s_example: [
+      strategy: Cluster.Strategy.Kubernetes,
+      config: [
+        kubernetes_selector: "${LIBCLUSTER_KUBERNETES_SELECTOR}",
+        kubernetes_node_basename: "${LIBCLUSTER_KUBERNETES_NODE_BASENAME}"]]]
+
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -61,4 +72,3 @@ config :logger, level: :info
 
 # Finally import the config/prod.secret.exs
 # which should be versioned separately.
-import_config "prod.secret.exs"

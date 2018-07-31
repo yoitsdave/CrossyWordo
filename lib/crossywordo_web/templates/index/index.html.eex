@@ -5,7 +5,7 @@ This is my index!
 <div class="old">
   <%= text_input(:room, "name", class: "text-in", value: "empty", id: "old-name") %>
 
-  <%= form_for @conn, "/room/empty", [multipart: true, id: "old-submit"], fn f -> %>
+  <%= form_for @conn, "/room/empty", [multipart: true, id: "old-submit"], fn _f -> %>
     <%= submit("Go", class: "submit-btn", id: "old-submit-btn") %>
   <% end %>
 
