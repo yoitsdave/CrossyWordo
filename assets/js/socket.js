@@ -103,7 +103,6 @@ export var App = {
       }
       //Letters
       else if (65 <= e.which && e.which <= 90) {
-        console.log(e.code);
         changeText(window.pointer, e.code.slice(-1))
         seekNext();
       }
