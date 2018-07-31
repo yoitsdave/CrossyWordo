@@ -1,6 +1,26 @@
 This is my index!
 
-<%= form_for @conn, "/room/empty", [multipart: true], fn f -> %>
-  <%= file_input(f, "submit", class: "file-in") %>
-  <%= submit "Submit", class: "submit-btn" %>
-<% end %>
+<br><br>
+
+<div class="old">
+  <%= text_input(:room, "name", class: "text-in", value: "empty", id: "old-name") %>
+
+  <%= form_for @conn, "/room/empty", [multipart: true, id: "old-submit"], fn f -> %>
+    <%= submit("Go", class: "submit-btn") %>
+  <% end %>
+
+</div>
+
+<br><br>
+
+<div class="new">
+  <%= text_input(:room, "name", class: "text-in", value: "empty", id: "new-name") %>
+
+  <%= form_for @conn, "/room/empty", [multipart: true, id: "new-submit"], fn f -> %>
+    <%= file_input(f, "submit", class: "file-in") %>
+    <%= submit "Submit", class: "submit-btn" %>
+  <% end %>
+</div>
+
+<script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+<script>require("js/app").IndexApp.run()</script>

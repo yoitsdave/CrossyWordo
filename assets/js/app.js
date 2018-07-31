@@ -17,4 +17,8 @@ import "phoenix_html"
 //
 // Local files can be imported directly using relative
 // paths "./socket" or full ones "web/static/js/socket".
-import socket from "./socket"
+import { App as SocketApp} from "./socket.js"
+import { App as IndexApp } from "./index.js"
+
+export {SocketApp}
+export {IndexApp}
