@@ -53,8 +53,9 @@ defmodule Crossywordo.Board do
   def handle_call([call_type | rest], from, board) do
     case call_type do
       "get_clues" -> get_clues(rest, from, board)
+      "get_dims" -> get_dims(rest, from, board)
       "get_states" -> get_states(rest, from, board)
-      "say_hi" -> say_hi(rest, from, board)
+
       "set_letter" -> set_letter(rest, from, board)
 
       other -> failed_call([other | rest], from, board)
@@ -67,6 +68,12 @@ defmodule Crossywordo.Board do
     {:reply, :ok, board}
   end
 
+  def get_dims(_rest, {from_pid, _term}, board) do
+    dims = [Map.get(board, "width"), Map.get(board, "height")]
+    send(from_pid, "dims:" <> clean dims)
+    {:reply, :ok, board}
+  end
+
   def get_states(_rest, {from_pid, _term}, board) do
     tuple_board = Map.get(board, "board") |> List.to_tuple
 
@@ -75,13 +82,8 @@ defmodule Crossywordo.Board do
                       tuple_board |>
                       elem(square_num)
                     end)
-    IO.puts(clean vals)
-    send(from_pid, "states:" <> Poison.encode!(vals))
-    {:reply, :ok, board}
-  end
-
-  def say_hi(_rest, {from_pid, _term}, board) do
-    send(from_pid, "greetings:hello there!")
+    out = Poison.encode!(vals)
+    send(from_pid, "states:" <> out)
     {:reply, :ok, board}
   end
 
@@ -95,7 +97,7 @@ defmodule Crossywordo.Board do
                                   Map.update!("current", fn _x -> val end)
                                 end)
                               end)
-    send(from_pid, "update:"<>"["<>square_num<>","<>val<>"]")
+    send(from_pid, "update:"<> Poison.encode! [square_num, val])
     {:reply, :ok, new_board}
   end
 

@@ -25,7 +25,7 @@ defmodule CrossywordoWeb.BoardChannel do
   #must be treated differently
   @impl true
   def handle_in("call_in", %{"call" => call}, socket) do
-     GenServer.call({:global, socket.topic}, call |> String.split(" "))
+     GenServer.call({:global, socket.topic}, call |> String.split("|"))
      {:noreply, socket}
   end
 end

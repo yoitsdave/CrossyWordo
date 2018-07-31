@@ -759,7 +759,7 @@ if __name__ == "__main__":
         #set relevant clue of all affected squares
         affected = range(clue['cell'], clue['cell']+clue['len'])
         for cell_num in affected:
-            board[cell_num]['down_num'] = clue['num']
+            board[cell_num]['across_num'] = clue['num']
 
     downs = []
     for clue in loaded_nums.down:

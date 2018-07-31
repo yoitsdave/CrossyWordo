@@ -6,84 +6,192 @@ import {Socket} from "phoenix"
 
 export var App = {
   run: function() {
-    let socket = new Socket("/socket", {params: {token: window.userToken}})
+    function addSquare(type, number, label_num) {
+      let source = document.getElementById('board');
 
-    // When you connect, you'll often need to authenticate the client.
-    // For example, imagine you have an authentication plug, `MyAuth`,
-    // which authenticates the session and assigns a `:current_user`.
-    // If the current user exists you can assign the user's token in
-    // the connection for use in the layout.
-    //
-    // In your "lib/web/router.ex":
-    //
-    //     pipeline :browser do
-    //       ...
-    //       plug MyAuth
-    //       plug :put_user_token
-    //     end
-    //
-    //     defp put_user_token(conn, _) do
-    //       if current_user = conn.assigns[:current_user] do
-    //         token = Phoenix.Token.sign(conn, "user socket", current_user.id)
-    //         assign(conn, :user_token, token)
-    //       else
-    //         conn
-    //       end
-    //     end
-    //
-    // Now you need to pass this token to JavaScript. You can do so
-    // inside a script tag in "lib/web/templates/layout/app.html.eex":
-    //
-    //     <script>window.userToken = "<%= assigns[:user_token] %>";</script>
-    //
-    // You will need to verify the user token in the "connect/2" function
-    // in "lib/web/channels/user_socket.ex":
-    //
-    //     def connect(%{"token" => token}, socket) do
-    //       # max_age: 1209600 is equivalent to two weeks in seconds
-    //       case Phoenix.Token.verify(socket, "user socket", token, max_age: 1209600) do
-    //         {:ok, user_id} ->
-    //           {:ok, assign(socket, :user, user_id)}
-    //         {:error, reason} ->
-    //           :error
-    //       end
-    //     end
-    //
-    // Finally, pass the token on connect as below. Or remove it
-    // from connect if you don't care about authentication.
+      let square = document.createElement('div');
+      square.className = type;
+      square.setAttribute("id", "cell" + number.toString())
 
-    socket.connect()
+      if (label_num != -1) {
+        let label = document.createElement('div');
+        label.className = "label";
+        label.setAttribute("id", "label" + label_num);
 
-    // get url, to call room name
-    var url = window.location.href.split("/");
+        let textNode = document.createTextNode(label_num.toString());
+        label.appendChild(textNode);
 
-    // Now that you are connected, you can join channels with a topic:
-    let channel = socket.channel("board:" + url[url.length - 1],
-                                {name: "Bob"})
-
-    // attach to chat input and message output in html
-    let chatInput = document.querySelector("#chat-input")
-    let messagesContainer = document.querySelector("#messages")
-
-    // add listener for enter keypress in the input to export call_in signal
-    chatInput.addEventListener("keypress", event => {
-      if(event.keyCode === 13){
-        channel.push("call_in", {call: chatInput.value})
-        chatInput.value = ""
+        square.insertAdjacentElement("beforeend", label);
       }
-    })
 
-    // add listener for notice signal, and export to message box
-    channel.on("notice", payload => {
-      let messageItem = document.createElement("li")
-      messageItem.innerText = `${payload.contents}`
-      messagesContainer.appendChild(messageItem)
-    })
+      source.insertAdjacentElement("beforeend", square);
+    }
 
+    function takeStates(states) {
+      window.states = JSON.parse(states.contents.join(":"));
+      if (!window.board_set) {
+        fillBoard();
+        window.pointer = toggleSquare(getNext(-1, 1));
+        window.board_set = true;
+      }
+    }
 
-    // join channel
-    channel.join()
-      .receive("ok", resp => { console.log("Joined successfully", resp) })
-      .receive("error", resp => { console.log("Unable to join", resp) })
+    function takeClues(clues) {
+      let both = JSON.parse(clues.contents);
+      window.across_clues = new Map(both[0]);
+      window.down_clues = new Map(both[1]);
+    }
+
+    function takeDims(dims) {
+      let both = JSON.parse(dims.contents);
+      window.board_width = both[0];
+      window.board_height = both[1];
+    }
+
+    function takeUpdate(update) {
+      let diff = JSON.parse(update.contents);
+      changeTextVis(...diff);
+    }
+
+    function fillBoard() {
+      let i = 0;
+      for (let square of window.states) {
+        let fill = square.ans!="." ? "empty" : "filled";
+        let label = square.label;
+
+        addSquare(fill, i, label);
+        changeTextVis(i, square.current);
+        i++;
+      }
+    }
+
+    function toggleSquare(number) {
+      let square = document.getElementById("cell" + number);
+      if (square.className.includes(" selected")) {
+        square.className = square.className.split(" ")[0];
+      } else {
+        square.className += " selected";
+      }
+      return number;
+    }
+
+    function movePointer(from, to) {
+      toggleSquare(from);
+      return toggleSquare(to);
+    }
+
+    function getNext(from, step) {
+      let i = step;
+      let square = document.getElementById("cell" + ((from + i) % (window.board_width * window.board_height)).toString());
+      while (square.className.includes("filled")) {
+        i += step;
+        square = document.getElementById("cell" + ((from + i) % (window.board_width * window.board_height)).toString());
+      }
+
+      return ((from + i) % (window.board_width * window.board_height));
+    }
+
+    function handlePress(e) {
+      //Space
+      if (e.which === 32) {
+        changeText(window.pointer, " ")
+        seekNext();
+      }
+      //Enter
+      else if (e.which == 13) {
+
+      }
+      //Letters
+      else if (65 <= e.which && e.which <= 90) {
+        console.log(e.code);
+        changeText(window.pointer, e.code.slice(-1))
+        seekNext();
+      }
+      //Backspace
+      else if (e.which === 8) {
+      	seekPrev();
+        changeText(window.pointer, " ")
+      } else if (e.which === 9) {
+        //Tab
+        if (!e.shiftKey) {
+          alert("tab");
+        }
+        //Shift-Tab
+        else {
+          alert("shift tab")
+        }
+      }
+    }
+
+    function removeTextVis(number) {
+      let square = document.getElementById("cell" + number);
+
+      for (let node of square.childNodes) {
+        if (node.className === "contents") {
+          square.removeChild(node);
+        }
+      }
+    }
+
+    function changeTextVis(number, newText) {
+      removeTextVis(number);
+
+      let contents = document.createElement('div');
+      contents.className = "contents";
+      contents.setAttribute("id", "contents" + number);
+
+      let textNode = document.createTextNode(newText);
+      contents.appendChild(textNode);
+
+      let square = document.getElementById("cell" + number);
+    	square.insertAdjacentElement("beforeend", contents);
+
+    }
+    function seekNext() {
+      if (window.pointer ==  window.board_width*window.board_height - 1){
+        window.pointer = movePointer(window.pointer, 0)
+      } else {
+        window.pointer = movePointer(window.pointer, getNext(window.pointer, 1));
+      }
+    }
+
+    function seekPrev() {
+      if (window.pointer ==  0){
+        window.pointer = movePointer(window.pointer, window.board_width*window.board_height - 1)
+      } else {
+        window.pointer = movePointer(window.pointer, getNext(window.pointer, -1));
+      }
+    }
+
+    function changeText(square, newText){
+      let update = "set_letter|" + square + "|" + newText;
+      window.channel.push("call_in", {call: update});
+    }
+
+    function main() {
+      window.board_set = false;
+
+      let socket = new Socket("/socket", {params: {token: window.userToken}})
+      socket.connect()
+      var url = window.location.href.split("/");
+      window.channel = socket.channel("board:" + url[url.length - 1],
+                                  {name: "Bob"})
+
+      window.channel.join()
+        .receive("ok", resp => { console.log("Joined successfully", resp) })
+        .receive("error", resp => { console.log("Unable to join", resp) })
+
+      window.channel.on("states", takeStates);
+      window.channel.on("clues", takeClues);
+      window.channel.on("dims", takeDims);
+      window.channel.on("update", takeUpdate);
+      document.addEventListener('keydown', handlePress);
+
+      window.channel.push("call_in", {call: "get_dims"});
+      window.channel.push("call_in", {call: "get_states"});
+      window.channel.push("call_in", {call: "get_clues"});
+    }
+
+    main();
   }
 }
