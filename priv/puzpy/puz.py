@@ -22,6 +22,7 @@ if PY3:
     str = str
     range = range
 else:
+    from __future__ import print_function
     str = unicode
     range = xrange
 
