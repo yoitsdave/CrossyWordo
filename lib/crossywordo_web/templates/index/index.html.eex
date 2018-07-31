@@ -6,7 +6,7 @@ This is my index!
   <%= text_input(:room, "name", class: "text-in", value: "empty", id: "old-name") %>
 
   <%= form_for @conn, "/room/empty", [multipart: true, id: "old-submit"], fn f -> %>
-    <%= submit("Go", class: "submit-btn") %>
+    <%= submit("Go", class: "submit-btn", id: "old-submit-btn") %>
   <% end %>
 
 </div>
@@ -18,7 +18,7 @@ This is my index!
 
   <%= form_for @conn, "/room/empty", [multipart: true, id: "new-submit"], fn f -> %>
     <%= file_input(f, "submit", class: "file-in") %>
-    <%= submit "Submit", class: "submit-btn" %>
+    <%= submit "Submit", class: "submit-btn", id: "new-submit-btn" %>
   <% end %>
 </div>
 
