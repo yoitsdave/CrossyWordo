@@ -759,7 +759,7 @@ if __name__ == "__main__":
         #set relevant clue of all affected squares
         affected = range(clue['cell'], clue['cell']+clue['len'])
         for cell_num in affected:
-            board[cell_num]['across_num'] = len(acrosses) - 1
+            board[cell_num]['down_num'] = clue['num']
 
     downs = []
     for clue in loaded_nums.down:
@@ -773,7 +773,7 @@ if __name__ == "__main__":
         affected = range(clue['cell'], clue['cell']+(loaded_puz.width*clue['len']),
                          loaded_puz.width)
         for cell_num in affected:
-            board[cell_num]['down_num'] = len(downs) - 1
+            board[cell_num]['down_num'] = clue['num']
 
     if loaded_puz.has_rebus():
         loaded_rebus = loaded_puz.rebus()
