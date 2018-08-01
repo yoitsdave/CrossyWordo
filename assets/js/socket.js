@@ -1,7 +1,5 @@
 import "phoenix_html"
-
-// To use Phoenix channels, the first step is to import Socket
-// and connect at the socket path in "lib/web/endpoint.ex":
+import textFit from "textfit"
 import {Socket} from "phoenix"
 
 export var App = {
@@ -32,6 +30,7 @@ export var App = {
       if (!window.board_set) {
         fillBoard();
         window.pointer = toggleSquare(getNext(-1, 1));
+        window.direction = "across";
         window.board_set = true;
       }
     }
@@ -40,6 +39,8 @@ export var App = {
       let both = JSON.parse(clues.contents);
       window.across_clues = new Map(both[0]);
       window.down_clues = new Map(both[1]);
+
+      updateClue();
     }
 
     function takeDims(dims) {
@@ -152,6 +153,7 @@ export var App = {
       } else {
         window.pointer = movePointer(window.pointer, getNext(window.pointer, 1));
       }
+      updateClue();
     }
 
     function seekPrev() {
@@ -160,6 +162,7 @@ export var App = {
       } else {
         window.pointer = movePointer(window.pointer, getNext(window.pointer, -1));
       }
+      updateClue();
     }
 
     function changeText(square, newText){
@@ -168,7 +171,12 @@ export var App = {
     }
 
     function updateClue(){
-      
+      let clue = document.getElementById("clue");
+      let num = window.states[window.pointer][window.direction + "_num"];
+      let map = (window.direction === "across") ? window.across_clues : window.down_clues;
+
+      clue.innerText = num.toString() + ". " + map.get(num);
+      textFit(clue, {alignHoriz: true, alignVert: true, maxFontSize: 25});
     }
 
     function main() {
@@ -193,6 +201,7 @@ export var App = {
       window.channel.push("call_in", {call: "get_dims"});
       window.channel.push("call_in", {call: "get_states"});
       window.channel.push("call_in", {call: "get_clues"});
+
     }
 
     main();

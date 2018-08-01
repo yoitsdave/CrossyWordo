@@ -1,3 +1,7 @@
+html {
+  font-family: "Verdana", Helvetica, sans-serif;
+}
+
 #board {
   border: 1px solid black;
   width: 82vmin;
@@ -9,8 +13,9 @@
   border: 1px solid black;
   width: 82vmin;
   height: 6vmin;
-  margin: 0 auto;
-  font-size: 4vmin;
+  margin: 2px auto;
+  text-align: center;
+  font-size: 2.5vmin;
 }
 
 .filled {
@@ -30,7 +35,6 @@
   height: calc(((100%+15px) / 15) - 2px);
   border: 1px solid black;
   float: left;
-  font-family: "Verdana", Helvetica, sans-serif;
 }
 
 .contents {
@@ -54,7 +58,6 @@
   padding: 0;
   margin: 0;
   font-size: 2vmin;
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 .selected {
