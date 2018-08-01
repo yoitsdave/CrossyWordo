@@ -17,6 +17,14 @@ input[type=text]:focus {
     border: 3px solid #555;
 }
 
+button[type=submit] {
+  padding: 8px 24px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  float: right;
+}
+
 #old {
   border: 1px solid black;
   margin: 0 auto;
@@ -53,7 +61,8 @@ input[type=text]:focus {
   box-sizing: border-box;
   margin: 0 auto;
   padding: 12px 20px;
-  border: 2px solid grey;
+  border: 3px solid grey;
+  border-style: groove;
   border-radius: 3px;
   text-align: center;
 }
