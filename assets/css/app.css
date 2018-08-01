@@ -2,6 +2,26 @@ html {
   font-family: "Verdana", Helvetica, sans-serif;
 }
 
+input[type=text] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  outline: none;
+  border-radius: 3px;
+}
+
+input[type=text]:focus {
+    border: 3px solid #555;
+}
+
+#old {
+  border: 1px solid black;
+  margin: 0 auto;
+}
+
 #board {
   border: 1px solid black;
   width: 82vmin;
@@ -16,6 +36,39 @@ html {
   margin: 2px auto;
   text-align: center;
   font-size: 2.5vmin;
+}
+
+.file-in {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.file-in + label {
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 12px 20px;
+  border: 2px solid grey;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.file-in:focus + label, .file-in + label:hover {
+  color: red;
+}
+
+.file-in + label {
+	cursor: pointer; /* "hand" cursor */
+}
+
+.file-in:focus + label {
+	outline: 1px dotted #000;
+	outline: -webkit-focus-ring-color auto 5px;
 }
 
 .filled {

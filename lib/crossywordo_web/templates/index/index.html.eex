@@ -1,26 +1,27 @@
-This is my index!
+Welcome to CrossyWordo!
 
-<br><br>
+<br><hr><br>
 
-<div class="old">
-  <%= text_input(:room, "name", class: "text-in", value: "empty", id: "old-name") %>
+To join a board in progress, enter it here:
 
-  <%= form_for @conn, "/room/empty", [multipart: true, id: "old-submit"], fn _f -> %>
-    <%= submit("Go", class: "submit-btn", id: "old-submit-btn") %>
-  <% end %>
+<%= text_input(:room, "name", class: "text-in", value: "empty", id: "old-name") %>
 
-</div>
+<%= form_for @conn, "/room/empty", [multipart: true, id: "old-submit"], fn _f -> %>
+  <%= submit("Go", class: "submit-btn", id: "old-submit-btn") %>
+<% end %>
 
-<br><br>
+<br><br><hr><br>
 
-<div class="new">
-  <%= text_input(:room, "name", class: "text-in", value: "empty", id: "new-name") %>
+To start a new room, enter its name and upload a valid .puz here:
 
-  <%= form_for @conn, "/room/empty", [multipart: true, id: "new-submit"], fn f -> %>
-    <%= file_input(f, "submit", class: "file-in") %>
-    <%= submit "Submit", class: "submit-btn", id: "new-submit-btn" %>
-  <% end %>
-</div>
+<%= text_input(:room, "name", class: "text-in", value: "empty", id: "new-name") %>
+
+<%= form_for @conn, "/room/empty", [multipart: true, id: "new-submit"], fn f -> %>
+  <%= file_input(f, "submit", class: "file-in", id: "upload-file") %>
+  <label for="upload-file">Choose a file</label>
+  <br>
+  <%= submit "Submit", class: "submit-btn", id: "new-submit-btn" %>
+<% end %>
 
 <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
 <script>require("js/app").IndexApp.run()</script>
