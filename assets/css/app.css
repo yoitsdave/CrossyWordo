@@ -120,8 +120,25 @@ button[type=submit] {
   padding: 0;
   margin: 0;
   font-size: 2vmin;
+  color: black;
 }
 
 .selected {
+  background-color: yellow;
+}
+
+.selected-clue {
   background-color: aqua;
+}
+
+.unchecked {
+  color: black;
+}
+
+.correct {
+  color: blue;
+}
+
+.incorrect {
+  color: red;
 }

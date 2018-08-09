@@ -3,12 +3,79 @@ import textFit from "textfit"
 import {Socket} from "phoenix"
 
 export var App = {
-  run: function() {
+  main: function() {
+    //TODO implement mobile kb
+    //TODO implement checkAll button
+    //TODO implement rebus
+
+    function handleBackspace() {
+      let contents = document.getElementById("contents" + window.pointer)
+                             .textContent;
+
+      if (contents === " "){
+        seekPrev();
+        changeText(window.pointer, " ");
+      } else {
+        changeText(window.pointer, " ");
+      }
+    }
+
+    function checkAll() {
+      let i = -1;
+      for (let square of window.states){
+        i++;
+
+        if (square.ans === ".") {continue;}
+
+        let ref = document.getElementById("cell"+i);
+        let checked = ref.className.split(" ");
+        checked[1] = square.current === square.ans ? "correct" : "incorrect";
+        ref.className = checked.join(" ");
+      }
+    }
+
+    function toggleDirection() {
+      if (window.direction === "down") {window.direction = "across"}
+      else {window.direction = "down"}
+    }
+
+    function colorSelected() {
+      let num = window.states[window.pointer][window.direction+"_num"];
+
+      let i = 0;
+      for (let square of window.states){
+        if (square[window.direction+"_num"] === num) {
+          let ref = document.getElementById("cell"+i);
+          ref.className = ref.className.split(" ").slice(0,2).join(" ") + " selected-clue";
+        } else {
+          let ref = document.getElementById("cell"+i);
+          ref.className = ref.className.split(" ").slice(0,2).join(" ");
+        }
+        i++;
+      }
+
+      document.getElementById("cell"+window.pointer).className =
+          document.getElementById("cell"+window.pointer).className.split(" ").slice(0,2).join(" ")
+          + " selected";
+    }
+
+    function handleClick(e) {
+      let square = e.target;
+      let num = parseInt(square.id.replace("contents", ""));
+
+      if (window.pointer != num){
+        movePointer(num);
+      } else {
+        toggleDirection();
+        colorSelected();
+      }
+    }
+
     function addSquare(type, number, label_num) {
       let source = document.getElementById('board');
 
       let square = document.createElement('div');
-      square.className = type;
+      square.className = type +" unchecked";
       square.setAttribute("id", "cell" + number.toString())
 
       if (label_num != -1) {
@@ -26,8 +93,8 @@ export var App = {
     }
 
     function takeStates(states) {
-      window.states = JSON.parse(states.contents.join(":"));
       if (!window.board_set) {
+        window.states = JSON.parse(states.contents.join(":"));
         fillBoard();
         window.pointer = toggleSquare(getNext(-1, 1));
         window.direction = "across";
@@ -41,6 +108,7 @@ export var App = {
       window.down_clues = new Map(both[1]);
 
       updateClue();
+      colorSelected();
     }
 
     function takeDims(dims) {
@@ -69,28 +137,166 @@ export var App = {
     function toggleSquare(number) {
       let square = document.getElementById("cell" + number);
       if (square.className.includes(" selected")) {
-        square.className = square.className.split(" ")[0];
+        square.className = square.className.split(" ").slice(0,2).join(" ");
       } else {
         square.className += " selected";
       }
       return number;
     }
 
-    function movePointer(from, to) {
-      toggleSquare(from);
-      return toggleSquare(to);
+    function movePointer(to) {
+      toggleSquare(window.pointer);
+      window.pointer = toggleSquare(to);
+      updateClue();
+      colorSelected();
     }
 
-    function getNext(from, step) {
-      let i = step;
-      let square = document.getElementById("cell" + ((from + i) % (window.board_width * window.board_height)).toString());
-      while (square.className.includes("filled")) {
-        i += step;
-        square = document.getElementById("cell" + ((from + i) % (window.board_width * window.board_height)).toString());
+    function getNext(from) {
+      let row = Math.floor(window.pointer / window.board_width);
+      let col = window.pointer % window.board_width;
+      let next;
+
+      while (true) {
+        if (window.direction === "across") {
+          if (col+1 < window.board_width){
+            col += 1;
+          } else {
+            if (row+1 < window.board_height){
+              row += 1;
+              col = 0;
+            } else {
+              row = 0;
+              col = 0;
+              toggleDirection();
+            }
+          }
+        } else {
+          if (row+1 < window.board_height){
+            row += 1;
+          } else {
+            if (col+1 < window.board_width){
+              col += 1;
+              row = 0;
+            } else {
+              col = 0;
+              row = 0;
+              toggleDirection();
+            }
+          }
+        }
+
+        next = window.states[row*window.board_width + col];
+        if (next.ans != "."){
+          return row*window.board_width + col;
+        }
+      }
+    }
+
+    function getPrev(from) {
+      let row = Math.floor(window.pointer / window.board_width);
+      let col = window.pointer % window.board_width;
+      let next;
+
+      while (true) {
+        if (window.direction === "across") {
+          if (col-1 >= 0){
+            col -= 1;
+          } else {
+            if (row-1 >= 0){
+              row -= 1;
+              col = window.board_width-1;
+            } else {
+              row = window.board_width-1;
+              col = window.board_height-1;
+            }
+          }
+        } else {
+          if (row-1 >= 0){
+            row -= 1;
+          } else {
+            if (col-1 >= 0){
+              col -= 1;
+              row = window.board_height-1;
+            } else {
+              row = window.board_width-1;
+              col = window.board_height-1;
+              toggleDirection();
+            }
+          }
+        }
+
+        next = window.states[row*window.board_width + col];
+        if (next.ans != "."){
+          return row*window.board_width + col;
+        }
+      }
+    }
+
+    function getNextWordStart(from) {
+      let row = Math.floor(window.pointer / window.board_width);
+      let col = window.pointer % window.board_width;
+      let current = parseInt(window.states[from][window.direction+"_num"]);
+      let next;
+
+      while (true) {
+        if (col+1 < window.board_width){
+          col += 1;
+        } else {
+          if (row+1 < window.board_height){
+            row += 1;
+            col = 0;
+          } else {
+            row = 0;
+            col = 0;
+            toggleDirection();
+            current = 0;
+          }
+        }
+
+        next = window.states[row*window.board_width + col];
+        if (next.ans != "." && (parseInt(next[window.direction+"_num"]) > current)){
+          return row*window.board_width + col;
+        }
+      }
+    }
+
+    function getPrevWordStart(from) { //FIXME FIX THIS SHIT ITS BROKEN
+      let row = Math.floor(window.pointer / window.board_width);
+      let col = window.pointer % window.board_width;
+      let current = parseInt(window.states[from][window.direction+"_num"]);
+      let next;
+      let label;
+
+      while (true) {
+        if (col-1 >= 0){
+          col -= 1;
+        } else {
+          if (row-1 >= 0){
+            row -= 1;
+            col = window.board_width-1;
+          } else {
+            row = window.board_height-1;
+            col = window.board_width-1;
+            toggleDirection();
+            current = window.board_width*window.board_height+1;
+          }
+        }
+
+        next = window.states[row*window.board_width + col];
+        if (next.ans != "." && (parseInt(next[window.direction+"_num"]) < current)){
+          label = parseInt(next[window.direction+"_num"]);
+          break;
+        }
       }
 
-      return ((from + i) % (window.board_width * window.board_height));
-    }
+     let i=0;
+     for (let x of window.states){
+       if (x[window.direction+"_num"] === label){
+         return i;
+       }
+       i++;
+     }
+   }
 
     function handlePress(e) {
       //Space
@@ -100,7 +306,39 @@ export var App = {
       }
       //Enter
       else if (e.which == 13) {
-
+        checkAll();
+      }
+      //Left Arrow
+      else if (e.which == 37){
+        if (window.direction === "across") {seekPrev()}
+        else {
+          toggleDirection();
+          colorSelected();
+        }
+      }
+      //Right Arrow
+      else if (e.which == 39){
+        if (window.direction === "across") {seekNext()}
+        else {
+          toggleDirection();
+          colorSelected();
+        }
+      }
+      //Up Arrow
+      else if (e.which == 38){
+        if (window.direction === "down") {seekPrev()}
+        else {
+          toggleDirection();
+          colorSelected();
+        }
+      }
+      //Down Arrow
+      else if (e.which == 40){
+        if (window.direction === "down") {seekNext()}
+        else {
+          toggleDirection();
+          colorSelected();
+        }
       }
       //Letters
       else if (65 <= e.which && e.which <= 90) {
@@ -109,16 +347,16 @@ export var App = {
       }
       //Backspace
       else if (e.which === 8) {
-      	seekPrev();
-        changeText(window.pointer, " ")
+        handleBackspace();
       } else if (e.which === 9) {
+        e.preventDefault();
         //Tab
         if (!e.shiftKey) {
-          alert("tab");
+          seekNextWord();
         }
         //Shift-Tab
         else {
-          alert("shift tab")
+          seekPrevWord();
         }
       }
     }
@@ -144,29 +382,38 @@ export var App = {
       contents.appendChild(textNode);
 
       let square = document.getElementById("cell" + number);
+      let checked = square.className.split(" ");
+      checked[1] = "unchecked";
+      square.className = checked.join(" ");
     	square.insertAdjacentElement("beforeend", contents);
 
     }
+
     function seekNext() {
-      if (window.pointer ==  window.board_width*window.board_height - 1){
-        window.pointer = movePointer(window.pointer, 0)
-      } else {
-        window.pointer = movePointer(window.pointer, getNext(window.pointer, 1));
-      }
-      updateClue();
+      movePointer(getNext(window.pointer));
     }
 
     function seekPrev() {
-      if (window.pointer ==  0){
-        window.pointer = movePointer(window.pointer, window.board_width*window.board_height - 1)
-      } else {
-        window.pointer = movePointer(window.pointer, getNext(window.pointer, -1));
-      }
+      movePointer(getPrev(window.pointer));
       updateClue();
+      colorSelected();
+    }
+
+    function seekNextWord() {
+      movePointer(getNextWordStart(window.pointer));
+      updateClue();
+      colorSelected();
+    }
+
+    function seekPrevWord() {
+      movePointer(getPrevWordStart(window.pointer));
+      updateClue();
+      colorSelected();
     }
 
     function changeText(square, newText){
       let update = "set_letter|" + square + "|" + newText;
+      window.states[square].current = newText;
       window.channel.push("call_in", {call: update});
     }
 
@@ -202,6 +449,7 @@ export var App = {
       window.channel.push("call_in", {call: "get_states"});
       window.channel.push("call_in", {call: "get_clues"});
 
+      document.getElementById("board").onclick = handleClick;
     }
 
     main();
