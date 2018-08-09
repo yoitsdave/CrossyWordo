@@ -6,6 +6,7 @@ export var App = {
   main: function() {
     //TODO implement mobile kb
     //TODO implement checkAll button
+    //TODO implement seekNextWord/seekPrevWord button
     //TODO implement rebus
 
     function handleBackspace() {
@@ -260,7 +261,7 @@ export var App = {
       }
     }
 
-    function getPrevWordStart(from) { //FIXME FIX THIS SHIT ITS BROKEN
+    function getPrevWordStart(from) { //FIXME FIX THIS SHIT ITS BROKEN ON DOWNS
       let row = Math.floor(window.pointer / window.board_width);
       let col = window.pointer % window.board_width;
       let current = parseInt(window.states[from][window.direction+"_num"]);
