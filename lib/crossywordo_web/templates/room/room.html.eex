@@ -1,9 +1,12 @@
-<h2>Welcome to room <%= @room_name %> </h2>
+<% @room_name %>
 
 <div id="board"> </div>
 <div id="clue"> You need javascript enabled to play this! </div>
+<div id="keyboard"> </div>
+
 When you're ready for the mobile stuff, take a look at
 <a href="https://github.com/jaz303/oskar"> this mobile keyboard library </a>
+
 
 <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
 <script>require("js/app").SocketApp.main()</script>

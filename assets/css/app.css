@@ -46,6 +46,10 @@ button[type=submit] {
   font-size: 2.5vmin;
 }
 
+#keyboard {
+ margin: 0 auto;
+}
+
 .file-in {
 	width: 0.1px;
 	height: 0.1px;
@@ -141,4 +145,35 @@ button[type=submit] {
 
 .incorrect {
   color: red;
+}
+
+
+
+.osk {
+    width: 100%;
+}
+.osk-row {
+  text-align: center;
+  margin-bottom: 4px;
+}
+.osk-key {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  display: inline-block;
+  width: 6vmin;
+  height: 6vmin ;
+  background: #323231;
+  color: #A5C0CA;
+  border-radius: 5px;
+  text-align: center;
+  text-decoration: none;
+  font: 15px/1 Helvetica, Arial;
+  padding-top: 13px;
+}
+.osk-key + .osk-key {
+  margin-left: 1vmin;
+}
+.osk-key.space {
+  width: 62vmin;
 }
