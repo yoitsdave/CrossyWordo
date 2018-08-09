@@ -38,6 +38,8 @@ export var App = {
     function toggleDirection() {
       if (window.direction === "down") {window.direction = "across"}
       else {window.direction = "down"}
+
+      updateClue();
     }
 
     function colorSelected() {
