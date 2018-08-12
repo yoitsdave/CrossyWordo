@@ -4,7 +4,7 @@ Welcome to CrossyWordo!
 
 To join a board in progress, enter it here:
 
-<%= text_input(:room, "name", class: "text-in", value: "empty", id: "old-name") %>
+<%= text_input(:room, "name", class: "text-in", value: "", placeholder: "Room Name", id: "old-name") %>
 
 <%= form_for @conn, "/room/empty", [multipart: true, id: "old-submit"], fn _f -> %>
   <%= submit("Go", class: "submit-btn", id: "old-submit-btn") %>
@@ -12,9 +12,9 @@ To join a board in progress, enter it here:
 
 <br><br><hr><br>
 
-To start a new room, enter its name and upload a valid .puz here:
+To start a new room, enter its name(with no spaces or special characters) and upload a valid .puz here:
 
-<%= text_input(:room, "name", class: "text-in", value: "empty", id: "new-name") %>
+<%= text_input(:room, "name", class: "text-in", value: "", placeholder: "Room Name", id: "new-name") %>
 
 <%= form_for @conn, "/room/empty", [multipart: true, id: "new-submit"], fn f -> %>
   <%= file_input(f, "submit", class: "file-in", id: "upload-file") %>

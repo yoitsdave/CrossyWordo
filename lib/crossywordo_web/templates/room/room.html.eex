@@ -1,6 +1,6 @@
 <% @room_name %>
-<link href='//fonts.googleapis.com/css?family=Lato:200,400,700' rel='stylesheet' type='text/css'>
-
+<link href='//fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 <div id="board"> </div>
 

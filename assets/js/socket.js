@@ -503,18 +503,18 @@ export var App = {
 
       document.getElementById("board").onclick = handleClick;
 
-      if (needsKeyboard()){
-      //if (true) {
+      //if (needsKeyboard()){
+      if (true) {
         let oskar = require("oskar");
 
         let keyMap = {
           0: [
               ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-              [{cap: 'Check', value: 'CheckAll'},
+              [{cap: '?', value: 'CheckAll'},
                 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-              [ {cap: 'Show', value: 'RevealAll'},
-                {cap: 'Rebus', value: 'Rebus'}, 'Z', 'X', 'C', 'V', 'B',
-                'N', 'M', {cap: '\u2190', value: 'Backspace'}],
+              [ {cap: 'See', value: 'RevealAll'},
+                {cap: '...', value: 'Rebus'}, 'Z', 'X', 'C', 'V', 'B',
+                'N', 'M', {cap: 'Del', value: 'Backspace'}],
               [' ']
              ]
         }
@@ -524,6 +524,11 @@ export var App = {
 
       document.getElementById("next").onclick = seekNextWord;
       document.getElementById("prev").onclick = seekPrevWord;
+      document.getElementById("clue").onclick = () => {
+        toggleDirection();
+        colorSelected();
+        updateClue();
+      }
     }
 
     main();
