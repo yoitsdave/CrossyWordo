@@ -503,8 +503,8 @@ export var App = {
 
       document.getElementById("board").onclick = handleClick;
 
-      //if (needsKeyboard()){
-      if (true) {
+      if (needsKeyboard()){
+      //if (true) {
         let oskar = require("oskar");
 
         let keyMap = {
