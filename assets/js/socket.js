@@ -4,10 +4,20 @@ import {Socket} from "phoenix"
 
 export var App = {
   main: function() {
-    //TODO implement checkAll button
-    //TODO implement seekNextWord/seekPrevWord button
+    //EASY
+    //TODO implement checkAll - use fxn checkALl - DONE
+    //TODO implement seekNextWord/seekPrevWord button - DONE
+    //TODO make black squares unclickable - DONE
+    //TODO fix screen sizing - DONE
+    //TODO add backspace and rebus keys - DONE
+    //TODO support backspace - DONE
 
+    //LESS EASY
+    //TODO implement revealAll
+    //TODO support sunday sized boards
+    //TODO implement zoom only for board
     //TODO implement rebus
+    //TODO keep room open for some minutes - use Channel.terminate callback
 
     function needsKeyboard() {
       var check = false;
@@ -17,12 +27,31 @@ export var App = {
 
     function forwardKeyPress(key) {
       let e = new Event("keydown");
-      e.key = key;
-      e.keyCode = e.key.charCodeAt(0);
-      e.which = e.keyCode;
-      e.code = "Key" + key;
-      console.log(key, e.keyCode);
-      document.dispatchEvent(e);
+      if (key === "Backspace"){
+        e.key = key;
+        e.keyCode = 8;
+        e.which = e.keyCode;
+        e.code = key;
+        console.log(key, e.keyCode);
+        document.dispatchEvent(e);
+      }
+      else if (key === "CheckAll"){
+        checkAll();
+      }
+      else if (key === "Rebus") {
+        alert("rebus not yet supported");
+      }
+      else if (key === "RevealAll") {
+        alert("reveal not yet supported");
+      }
+      else {
+        e.key = key;
+        e.keyCode = e.key.charCodeAt(0);
+        e.which = e.keyCode;
+        e.code = "Key" + key;
+        console.log(key, e.keyCode);
+        document.dispatchEvent(e);
+      }
     }
 
     function handleBackspace() {
@@ -80,12 +109,15 @@ export var App = {
       let square = e.target;
       let num = parseInt(square.id.replace("contents", ""));
 
+      if (window.states[num].ans == ".") {return;}
+
       if (window.pointer != num){
         movePointer(num);
       } else {
         toggleDirection();
         colorSelected();
       }
+      updateClue();
     }
 
     function addSquare(type, number, label_num) {
@@ -471,21 +503,27 @@ export var App = {
 
       document.getElementById("board").onclick = handleClick;
 
-      if (needsKeyboard()){
-      //if (true) {
+      //if (needsKeyboard()){
+      if (true) {
         let oskar = require("oskar");
 
         let keyMap = {
           0: [
               ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-              ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-              ['Z', 'X', 'C', 'V', 'B', 'N', 'M'],
+              [{cap: 'Check', value: 'CheckAll'},
+                'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+              [ {cap: 'Show', value: 'RevealAll'},
+                {cap: 'Rebus', value: 'Rebus'}, 'Z', 'X', 'C', 'V', 'B',
+                'N', 'M', {cap: '\u2190', value: 'Backspace'}],
               [' ']
              ]
         }
         let kb = oskar({"keys": keyMap, "onkeypress": forwardKeyPress});
         kb.appendTo(document.getElementById("keyboard"));
       }
+
+      document.getElementById("next").onclick = seekNextWord;
+      document.getElementById("prev").onclick = seekPrevWord;
     }
 
     main();

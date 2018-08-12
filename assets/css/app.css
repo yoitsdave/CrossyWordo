@@ -1,5 +1,9 @@
+body {
+  margin: 0;
+}
+
 html {
-  font-family: "Verdana", Helvetica, sans-serif;
+  font-family: "open-sans";
 }
 
 input[type=text] {
@@ -25,29 +29,45 @@ button[type=submit] {
   float: right;
 }
 
+button[type=button] {
+  height: 100%;
+  width: 10%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
 #old {
   border: 1px solid black;
   margin: 0 auto;
 }
 
 #board {
-  border: 1px solid black;
-  width: 82vmin;
-  height: 82vmin;
+  width: 60vh;
+  height: 60vh;
   margin: 0 auto;
 }
 
-#clue {
-  border: 1px solid black;
-  width: 82vmin;
-  height: 6vmin;
-  margin: 2px auto;
+#clue-box {
+  width: 60%;
+  height: 4vh;
   text-align: center;
-  font-size: 2.5vmin;
+  font-size: 2.5vh;
+  margin: 0px auto;
+  padding-bottom: 1vh;
+}
+
+#clue {
+  position: absolute;
+  top: 60%;
+  left: 25%;
+  height: 4vh;
+  width: 50%;
 }
 
 #keyboard {
- margin: 0 auto;
+  width: 100%;
+  height: 34vh;
 }
 
 .file-in {
@@ -104,14 +124,13 @@ button[type=submit] {
 }
 
 .contents {
-  position: absolute;
-
   float: left;
   width: 100%;
   height: 100%;
   text-align: center;
-  line-height: 6.8vmin;
-  font-size: 4.5vmin;
+  line-height: 5.0vh;
+  font-size: 3.2vh;
+  font-weight: 200;
 }
 
 .label {
@@ -123,7 +142,7 @@ button[type=submit] {
   border: 0px solid black;
   padding: 0;
   margin: 0;
-  font-size: 2vmin;
+  font-size: 1.3vh;
   color: black;
 }
 
@@ -147,8 +166,6 @@ button[type=submit] {
   color: red;
 }
 
-
-
 .osk {
     width: 100%;
 }
@@ -161,14 +178,15 @@ button[type=submit] {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   display: inline-block;
-  width: 6vmin;
-  height: 6vmin ;
+  width: 8vmin;
+  height: 8vmin;
   background: #323231;
   color: #A5C0CA;
   border-radius: 5px;
   text-align: center;
   text-decoration: none;
-  font: 15px/1 Helvetica, Arial;
+  font: 15px;
+  font-weight: 700;
   padding-top: 13px;
 }
 .osk-key + .osk-key {
