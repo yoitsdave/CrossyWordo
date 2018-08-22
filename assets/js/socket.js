@@ -4,6 +4,8 @@ import {Socket} from "phoenix"
 
 export var App = {
   main: function() {
+    //Necessary before 0.1.1 - Sundays and Fixed tab/shift-tab
+
     //EASY
     //TODO implement checkAll - use fxn checkALl - DONE
     //TODO implement seekNextWord/seekPrevWord button - DONE
@@ -14,7 +16,7 @@ export var App = {
 
     //LESS EASY
     //TODO implement revealAll
-    //TODO support sunday sized boards
+    //TODO support sunday sized boards - DONE
     //TODO implement zoom only for board - DONE
     //TODO implement rebus
     //TODO keep room open for some minutes - use Channel.terminate callback
@@ -167,7 +169,59 @@ export var App = {
       changeTextVis(...diff);
     }
 
+    function setSquareSizes() {
+       let filled = `.filled {
+        position: relative;
+        width: calc(((100%+${2 * window.board_width}px) / ${window.board_width}) - 2px);
+        height: calc(((100%+${2 * window.board_height}px) / ${window.board_height}}) - 2px);
+        background: black;
+        border: 1px solid black;
+        padding: 0;
+        margin: 0;
+        float: left;
+      }`;
+
+      let empty = `.empty {
+        position: relative;
+        width: calc(((100%+${2 * window.board_width}px) / ${window.board_width}) - 2px);
+        height: calc(((100%+${2 * window.board_height}px) / ${window.board_height}}) - 2px);
+        border: 1px solid black;
+        float: left;
+      }`;
+
+
+      let contents = `.contents {
+        float: left;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        line-height: ${120 / Math.max(window.board_width, window.board_height)}vmin;
+        font-size: ${67.5 / Math.max(window.board_width, window.board_height)}vmin;
+        font-weight: 300;
+      }`
+
+      let label = `.label {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 0px;
+        height: 0px;
+        border: 0px solid black;
+        padding: 0;
+        margin: 0;
+        font-size: ${27 / Math.max(window.board_width, window.board_height)}vmin;
+        color: black;
+      }`
+
+      let sizeControl = document.createElement("style");
+      sizeControl.innerText = filled + "\n" + empty + "\n" + contents + "\n" + label;
+      document.body.appendChild(sizeControl);
+
+    }
+
     function fillBoard() {
+      setSquareSizes();
+
       let i = 0;
       for (let square of window.states) {
         let fill = square.ans!="." ? "empty" : "filled";

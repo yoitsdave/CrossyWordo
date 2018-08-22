@@ -107,48 +107,6 @@ button[type=button] {
 	outline: -webkit-focus-ring-color auto 5px;
 }
 
-.filled {
-  position: relative;
-  width: calc(((100%+15px) / 15) - 2px);
-  height: calc(((100%+15px) / 15) - 2px);
-  background: black;
-  border: 1px solid black;
-  padding: 0;
-  margin: 0;
-  float: left;
-}
-
-.empty {
-  position: relative;
-  width: calc(((100%+15px) / 15) - 2px);
-  height: calc(((100%+15px) / 15) - 2px);
-  border: 1px solid black;
-  float: left;
-}
-
-.contents {
-  float: left;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  line-height: 8.0vmin;
-  font-size: 4.5vmin;
-  font-weight: 300;
-}
-
-.label {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 0px;
-  height: 0px;
-  border: 0px solid black;
-  padding: 0;
-  margin: 0;
-  font-size: 1.8vmin;
-  color: black;
-}
-
 .selected {
   background-color: yellow;
 }
