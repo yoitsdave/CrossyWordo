@@ -19,7 +19,7 @@ export var App = {
     //TODO implement rebus
     //TODO keep room open for some minutes - use Channel.terminate callback
 
-    //TODO keyboard further down, keys bigger
+    //TODO keyboard further down, keys bigger - DONE
 
     function forwardKeyPress(key) {
       let e = new Event("keydown");

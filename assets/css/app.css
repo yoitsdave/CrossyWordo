@@ -67,6 +67,8 @@ button[type=button] {
 }
 
 #keyboard {
+  position: relative;
+  bottom:0;
   width: 100%;
   height: 34vh;
 }
@@ -168,6 +170,8 @@ button[type=button] {
 }
 
 .osk {
+    position: absolute;
+    bottom: 0;
     width: 100%;
 }
 .osk-row {
