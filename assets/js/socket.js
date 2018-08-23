@@ -1,33 +1,64 @@
-import "phoenix_html"
-import textFit from "textfit"
-import {Socket} from "phoenix"
+import "phoenix_html";
+import textFit from "textfit";
+import {Socket} from "phoenix";
+import "confetti-js";
 
 export var App = {
   main: function() {
-    //Necessary before 0.1.1 - Sundays and Fixed tab/shift-tab
+    //Necessary before 0.1.1 - inform users of finished board
 
     //EASY
-    //TODO implement checkAll - use fxn checkALl - DONE
-    //TODO implement seekNextWord/seekPrevWord button - DONE
-    //TODO make black squares unclickable - DONE
-    //TODO fix screen sizing - DONE
-    //TODO add backspace and rebus keys - DONE
-    //TODO support backspace - DONE
 
     //LESS EASY
     //TODO implement revealAll
     //TODO implement rebus
-    //TODO support sunday sized boards - DONE
-    //TODO implement zoom only for board - DONE
     //TODO inform users when they have finished a winning board
+    //TODO delete all stored boards periodically
 
     //HARD
     //TODO keep room open for some minutes - use Channel.terminate callback?
     //TODO support non-square sizes
     //TODO show clues on side for non-mobile
-    //TODO support electron / phonegap?
 
-    //TODO keyboard further down, keys bigger - DONE
+    //LONG TERM
+    //TODO implement users, user check to access board
+    //TODO support electron / react native?
+
+    function boardFinishedCorrectly() {
+      for (let state of states) {
+        if (state['ans'] != state['current']) {return false;}
+      }
+      return true;
+    }
+
+    function endGame() {
+      let settings = {"target":"confetti","max":"2500","size":"1","animate":true,"props":["circle","square","triangle","line"],"colors":[[165,104,246],[230,61,135],[0,199,228],[253,214,126]],"clock":"8","width":window.width,"height":window.height};
+      let confetti = new ConfettiGenerator(settings);
+      confetti.render();
+
+      let dpi = window.devicePixelRatio;
+      let canvas = document.getElementById('done');
+      let context = canvas.getContext('2d');
+      let style_height = +getComputedStyle(canvas).getPropertyValue("height").slice(0, -2);
+      let style_width = +getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);
+      canvas.setAttribute('height', style_height * dpi);
+      canvas.setAttribute('width', style_width * dpi);
+      context.font = "25vmin Open Sans";
+      context.fillStyle = "blue";
+      context.textAlign = "center";
+      context.fillText("DONE!", canvas.width/2, canvas.height/2);
+
+      changeTextVis = null;
+      changeText = null;
+    }
+
+    function revealAll() {
+      let i = 0;
+      for (let state of states){
+        changeText(i, state['ans']);
+        i++;
+      }
+    }
 
     function forwardKeyPress(key) {
       let e = new Event("keydown");
@@ -40,13 +71,17 @@ export var App = {
         document.dispatchEvent(e);
       }
       else if (key === "CheckAll"){
-        checkAll();
+        if (confirm("Check All?")){
+          checkAll();
+        }
       }
       else if (key === "Rebus") {
         alert("rebus not yet supported");
       }
       else if (key === "RevealAll") {
-        alert("reveal not yet supported");
+        if (confirm("Reveal All?")) {
+          revealAll();
+        }
       }
       else {
         e.key = key;
@@ -498,6 +533,10 @@ export var App = {
       checked[1] = "unchecked";
       square.className = checked.join(" ");
     	square.insertAdjacentElement("beforeend", contents);
+
+      if (boardFinishedCorrectly()) {
+        endGame();
+      }
 
     }
 
