@@ -92,14 +92,12 @@ export var App = {
     }
 
     function handleBackspace() {
-      console.log("started");
       if (window.states[window.pointer].current === " "){
         seekPrev();
         changeText(window.pointer, " ");
       } else {
         changeText(window.pointer, " ");
       }
-      console.log("ended");
     }
 
     function checkAll() {
@@ -488,7 +486,9 @@ export var App = {
       //Backspace
       else if (e.which === 8) {
         handleBackspace();
-      } else if (e.which === 9) {
+      }
+
+      else if (e.which === 9) {
         e.preventDefault();
         //Tab
         if (!e.shiftKey) {
@@ -559,6 +559,8 @@ export var App = {
     function changeText(square, newText){
       let update = "set_letter|" + square + "|" + newText;
       window.channel.push("call_in", {call: update});
+
+      changeTextVis(square, newText);
     }
 
     function updateClue(){
