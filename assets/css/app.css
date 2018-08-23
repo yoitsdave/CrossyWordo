@@ -170,7 +170,7 @@ button[type=button] {
   -moz-box-sizing: border-box;
   display: inline-block;
   width: 9.4vw;
-  height: 8vh;
+  height: 7.5vh;
   background: #323231;
   color: #A5C0CA;
   border-radius: 5px;
@@ -181,7 +181,7 @@ button[type=button] {
   padding-top: 13px;
 }
 .osk-key + .osk-key {
-  margin-left: .25vw;
+  margin-left: .35vw;
 }
 .osk-key.space {
   width: 97vw;

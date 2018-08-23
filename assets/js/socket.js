@@ -24,7 +24,7 @@ export var App = {
 
     function boardFinishedCorrectly() {
       for (let state of states) {
-        if (state['ans'] != state['current']) {return false;}
+        if (state['ans'] != state.current) {return false;}
       }
       return true;
     }
@@ -92,10 +92,7 @@ export var App = {
     }
 
     function handleBackspace() {
-      let contents = document.getElementById("contents" + window.pointer)
-                             .textContent;
-
-      if (contents === " "){
+      if (window.states[window.pointer].current === " "){
         seekPrev();
         changeText(window.pointer, " ");
       } else {
