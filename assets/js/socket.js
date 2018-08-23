@@ -5,22 +5,26 @@ import "confetti-js";
 
 export var App = {
   main: function() {
-    //Necessary before 0.1.1 - inform users of finished board
 
     //EASY
 
     //LESS EASY
-    //TODO implement rebus
     //TODO delete all stored boards periodically
 
     //HARD
     //TODO keep room open for some minutes - use Channel.terminate callback?
-    //TODO support non-square sizes
     //TODO show clues on side for non-mobile
 
     //LONG TERM
     //TODO implement users, user check to access board
     //TODO support electron / react native?
+
+    function handleRebus() {
+      let rebussed = prompt("Enter:").toUpperCase();
+
+      changeText(window.pointer, rebussed);
+      seekNext();
+    }
 
     function boardFinishedCorrectly() {
       for (let state of states) {
@@ -65,7 +69,6 @@ export var App = {
         e.keyCode = 8;
         e.which = e.keyCode;
         e.code = key;
-        console.log(key, e.keyCode);
         document.dispatchEvent(e);
       }
       else if (key === "CheckAll"){
@@ -74,7 +77,7 @@ export var App = {
         }
       }
       else if (key === "Rebus") {
-        alert("rebus not yet supported");
+        handleRebus();
       }
       else if (key === "RevealAll") {
         if (confirm("Reveal All?")) {
@@ -86,7 +89,6 @@ export var App = {
         e.keyCode = e.key.charCodeAt(0);
         e.which = e.keyCode;
         e.code = "Key" + key;
-        console.log(key, e.keyCode);
         document.dispatchEvent(e);
       }
     }
@@ -530,6 +532,11 @@ export var App = {
       checked[1] = "unchecked";
       square.className = checked.join(" ");
     	square.insertAdjacentElement("beforeend", contents);
+
+      contents.style["font-size"] = 67.5 /
+                            (Math.max(window.board_width, window.board_height)
+                            * newText.length * .75)
+                            + "vmin";
 
       if (boardFinishedCorrectly()) {
         endGame();
