@@ -92,12 +92,14 @@ export var App = {
     }
 
     function handleBackspace() {
+      console.log("started");
       if (window.states[window.pointer].current === " "){
         seekPrev();
         changeText(window.pointer, " ");
       } else {
         changeText(window.pointer, " ");
       }
+      console.log("ended");
     }
 
     function checkAll() {

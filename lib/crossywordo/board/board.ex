@@ -12,8 +12,7 @@ defmodule Crossywordo.Board do
     inspect(any,  limit: :infinity)
   end
 
-  # start_board.board tuples are mostly for internal access,
-  # but they are maps with values
+  # start_board.board tuples are maps with values
   # "current", "ans", "across_num", "down_num", "label", "circled"
 
   # filled blocks have the following predefined values:
@@ -95,7 +94,10 @@ defmodule Crossywordo.Board do
                                 List.update_at(String.to_integer(square_num),
                                 fn square ->
                                   square |>
-                                  Map.update!("current", fn _x -> val end)
+                                  Map.update!("current", fn _x -> val |>
+                                                                  String.slice(
+                                                                    0..16)
+                                                                  end)
                                 end)
                               end)
     send(from_pid, "update:"<> Poison.encode! [square_num, val])
