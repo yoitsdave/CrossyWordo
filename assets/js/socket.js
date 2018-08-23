@@ -16,10 +16,16 @@ export var App = {
 
     //LESS EASY
     //TODO implement revealAll
+    //TODO implement rebus
     //TODO support sunday sized boards - DONE
     //TODO implement zoom only for board - DONE
-    //TODO implement rebus
-    //TODO keep room open for some minutes - use Channel.terminate callback
+    //TODO inform users when they have finished a winning board
+
+    //HARD
+    //TODO keep room open for some minutes - use Channel.terminate callback?
+    //TODO support non-square sizes
+    //TODO show clues on side for non-mobile
+    //TODO support electron / phonegap?
 
     //TODO keyboard further down, keys bigger - DONE
 
@@ -64,7 +70,7 @@ export var App = {
       }
     }
 
-    function checkAll() { //FIXME only checks one users letter!
+    function checkAll() {
       let i = -1;
       for (let square of window.states){
         i++;
@@ -152,7 +158,9 @@ export var App = {
     function takeClues(clues) {
       let both = JSON.parse(clues.contents);
       window.across_clues = new Map(both[0]);
+      window.across_nums = Array.from(window.across_clues.keys());
       window.down_clues = new Map(both[1]);
+      window.down_nums = Array.from(window.down_clues.keys());
 
       updateClue();
       colorSelected();
@@ -332,65 +340,61 @@ export var App = {
     }
 
     function getNextWordStart(from) {
-      let row = Math.floor(window.pointer / window.board_width);
-      let col = window.pointer % window.board_width;
-      let current = parseInt(window.states[from][window.direction+"_num"]);
-      let next;
+      let currentClue = parseInt(window.states[from][window.direction+"_num"]);
+      let nextClue;
 
-      while (true) {
-        if (col+1 < window.board_width){
-          col += 1;
+      if (window.direction === "across"){
+        let currentIndex = window.across_nums.indexOf(currentClue);
+        if (currentIndex+1 < window.across_nums.length) {
+          nextClue = window.across_nums[currentIndex+1];
         } else {
-          if (row+1 < window.board_height){
-            row += 1;
-            col = 0;
-          } else {
-            row = 0;
-            col = 0;
-            toggleDirection();
-            current = 0;
-          }
+          toggleDirection();
+          nextClue = window.down_nums[0];
         }
+      } else {
+        let currentIndex = window.down_nums.indexOf(currentClue);
+        if (currentIndex+1 < window.down_nums.length) {
+          nextClue = window.down_nums[currentIndex+1];
+        } else {
+          toggleDirection();
+          nextClue = window.across_nums[0];
+        }
+      }
 
-        next = window.states[row*window.board_width + col];
-        if (next.ans != "." && (parseInt(next[window.direction+"_num"]) > current)){
-          return row*window.board_width + col;
+      let i = 0;
+      for (let n of window.states){
+        if (n[window.direction + "_num"] === nextClue){
+          return i;
         }
+        i++;
       }
     }
 
-    function getPrevWordStart(from) { //FIXME FIX THIS SHIT ITS BROKEN ON DOWNS
-      let row = Math.floor(window.pointer / window.board_width);
-      let col = window.pointer % window.board_width;
-      let current = parseInt(window.states[from][window.direction+"_num"]);
-      let next;
-      let label;
+   function getPrevWordStart(from) {
+     let currentClue = parseInt(window.states[from][window.direction+"_num"]);
+     let prevClue;
 
-      while (true) {
-        if (col-1 >= 0){
-          col -= 1;
-        } else {
-          if (row-1 >= 0){
-            row -= 1;
-            col = window.board_width-1;
-          } else {
-            row = window.board_height-1;
-            col = window.board_width-1;
-            toggleDirection();
-            current = window.board_width*window.board_height+1;
-          }
-        }
+     if (window.direction === "across"){
+       let currentIndex = window.across_nums.indexOf(currentClue);
+       if (currentIndex > 0) {
+         prevClue = window.across_nums[currentIndex-1];
+       } else {
+         toggleDirection();
+         prevClue = window.down_nums.slice(-1)[0];
+       }
+     } else {
+       let currentIndex = window.down_nums.indexOf(currentClue);
+       if (currentIndex > 0) {
+         prevClue = window.down_nums[currentIndex-1];
+       } else {
+         toggleDirection();
+         prevClue = window.across_nums.slice(-1)[0];
+       }
+     }
 
-        next = window.states[row*window.board_width + col];
-        if (next.ans != "." && (parseInt(next[window.direction+"_num"]) < current)){
-          label = parseInt(next[window.direction+"_num"]);
-          break;
-        }
-      }
-
-     let i=0;
-     for (let x of window.states){
-       if (x[window.direction+"_num"] === label){
+     let i = 0;
+     for (let n of window.states){
+       if (n[window.direction + "_num"] === prevClue){
          return i;
        }
        i++;
