@@ -10,9 +10,7 @@ export var App = {
     //EASY
 
     //LESS EASY
-    //TODO implement revealAll
     //TODO implement rebus
-    //TODO inform users when they have finished a winning board
     //TODO delete all stored boards periodically
 
     //HARD
@@ -32,7 +30,7 @@ export var App = {
     }
 
     function endGame() {
-      let settings = {"target":"confetti","max":"2500","size":"1","animate":true,"props":["circle","square","triangle","line"],"colors":[[165,104,246],[230,61,135],[0,199,228],[253,214,126]],"clock":"8","width":window.width,"height":window.height};
+      let settings = {"target":"confetti","max":"500","size":"1","animate":true,"props":["circle","square","triangle","line"],"colors":[[165,104,246],[230,61,135],[0,199,228],[253,214,126]],"clock":"25","width":window.width,"height":window.height};
       let confetti = new ConfettiGenerator(settings);
       confetti.render();
 
@@ -43,7 +41,7 @@ export var App = {
       let style_width = +getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);
       canvas.setAttribute('height', style_height * dpi);
       canvas.setAttribute('width', style_width * dpi);
-      context.font = "25vmin Open Sans";
+      context.font = "60vmin Open Sans";
       context.fillStyle = "blue";
       context.textAlign = "center";
       context.fillText("DONE!", canvas.width/2, canvas.height/2);
