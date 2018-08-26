@@ -6,19 +6,6 @@ import "confetti-js";
 export var App = {
   main: function() {
 
-    //EASY
-
-    //LESS EASY
-    //TODO delete all stored boards periodically
-
-    //HARD
-    //TODO keep room open for some minutes - use Channel.terminate callback?
-    //TODO show clues on side for non-mobile
-
-    //LONG TERM
-    //TODO implement users, user check to access board
-    //TODO support electron / react native?
-
     function handleRebus() {
       let rebussed = prompt("Enter:").toUpperCase();
 
