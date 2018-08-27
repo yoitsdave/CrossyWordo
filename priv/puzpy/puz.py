@@ -737,7 +737,8 @@ def dict_to_string(d):
 #across_clues: list of across clue strings, in the order they appear
 #down_clues: list of down clue strings, in the order they appear
 #board: dict of 5-len-lists for each cell of the pattern: (Number is -1 if unnumbered)
-#  {ans: string, across_num: int, down_num: int, label: int, circled: bool}
+#  {ans: string, across_num: int, down_num: int, label: int, circled: bool, checked: see below}
+#  checked will be 0 if unchecked, 1 if checked, and 2 if revealed
 if __name__ == "__main__":
     loaded_puz = read(sys.argv[1])
 
@@ -747,8 +748,8 @@ if __name__ == "__main__":
         counter += 1
 
     loaded_nums = loaded_puz.clue_numbering()
-    board = [{'ans': ans, 'across_num': None, 'down_num': None,
-              'label': -1, 'circled': False} for ans in loaded_puz.solution]
+    board = [{'current': '.', 'ans': ans, 'across_num': None, 'down_num': None,
+              'label': -1, 'circled': False, 'checked': '0'} for ans in loaded_puz.solution]
 
     acrosses = []
     for clue in loaded_nums.across:
@@ -762,6 +763,7 @@ if __name__ == "__main__":
         affected = range(clue['cell'], clue['cell']+clue['len'])
         for cell_num in affected:
             board[cell_num]['across_num'] = clue['num']
+            board[cell_num]['current'] = " "
 
     downs = []
     for clue in loaded_nums.down:
@@ -776,6 +778,7 @@ if __name__ == "__main__":
                          loaded_puz.width)
         for cell_num in affected:
             board[cell_num]['down_num'] = clue['num']
+            board[cell_num]['current'] = " "
 
     if loaded_puz.has_rebus():
         loaded_rebus = loaded_puz.rebus()

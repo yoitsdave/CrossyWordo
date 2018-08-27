@@ -30,23 +30,22 @@ defmodule Crossywordo.Board do
     {:ok, body} = File.read(List.to_string(:code.priv_dir(:crossywordo))
                             <> "/boards/#{file_name}.json.puz")
     current = Poison.decode!(body) |>
-              Map.update!("board", fn state ->
-                                     state |>
-                                     Enum.map(fn square ->
-                                                Map.put(square,
-                                                "current",
-                                                case Map.get(square, "ans") do
-                                                  "." -> "."
-                                                  _other -> " "
-                                                end)
-                                              end)
-                                   end)
+              Map.put("room", file_name)
     {:ok, current}
   end
 
   @impl true
-  def terminate(reason, _board) do
+  def terminate(reason, board) do
     IO.puts reason
+
+    file_name = Map.get(board, "room")
+    IO.puts "file: " <> file_name
+
+    File.write!(List.to_string(:code.priv_dir(:crossywordo))
+                <> "/boards/#{file_name}.json.puz",
+                Map.delete(board, "room") |>
+                Poison.encode!())
+    reason
   end
 
   @impl true

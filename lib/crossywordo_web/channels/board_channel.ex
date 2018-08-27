@@ -8,10 +8,10 @@ defmodule CrossywordoWeb.BoardChannel do
     {:ok, socket |> assign(:display_name, display_name)}
   end
 
-  #@impl true
-  #def terminate(_message, socket) do
-  #  GenServer.stop({:global, socket.topic}, :empty)
-  #end
+  @impl true
+  def terminate(_message, socket) do
+    GenServer.stop({:global, socket.topic}, :empty)
+  end
 
   @impl true
   def handle_info(received, socket) do
