@@ -41,7 +41,6 @@ export var App = {
       context.textAlign = "center";
       context.fillText("DONE!", canvas.width/2, canvas.height/2);
 
-      changeTextVis = null;
       changeText = null;
     }
 
