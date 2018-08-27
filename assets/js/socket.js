@@ -47,7 +47,7 @@ export var App = {
     function revealAll() {
       let i = 0;
       for (let state of states){
-        changeText(i, state['ans']);
+        changeText(i, state['ans'], 2);
         i++;
       }
     }
@@ -93,16 +93,13 @@ export var App = {
     }
 
     function checkAll() {
-      let i = -1;
+      let i = 0;
       for (let square of window.states){
+        if (square.ans != "." & square.current != " ") {
+          changeText(i, square.current, 1);
+        }
+
         i++;
-
-        if (square.ans === ".") {continue;}
-
-        let ref = document.getElementById("cell"+i);
-        let checked = ref.className.split(" ");
-        checked[1] = square.current === square.ans ? "correct" : "incorrect";
-        ref.className = checked.join(" ");
       }
     }
 
@@ -258,7 +255,7 @@ export var App = {
         let label = square.label;
 
         addSquare(fill, i, label);
-        changeTextVis(i, square.current);
+        changeTextVis(i, square.current, square.checked);
         i++;
       }
     }
@@ -505,7 +502,7 @@ export var App = {
       }
     }
 
-    function changeTextVis(number, newText) {
+    function changeTextVis(number, newText, checkedstate=0) {
       removeTextVis(number);
 
       window.states[number].current = newText;
@@ -519,7 +516,14 @@ export var App = {
 
       let square = document.getElementById("cell" + number);
       let checked = square.className.split(" ");
-      checked[1] = "unchecked";
+      if (checkedstate === "0") {
+        checked[1] = "unchecked";
+      } else if (checkedstate === "1") {
+        checked[1] = window.states[number].ans === window.states[number].current?
+                     "correct" : "incorrect"
+      } else if (checkedstate === "2") { //FIXME add revealed color
+        checked[1] = "unchecked";
+      }
       square.className = checked.join(" ");
     	square.insertAdjacentElement("beforeend", contents);
 
@@ -553,11 +557,11 @@ export var App = {
       colorSelected();
     }
 
-    function changeText(square, newText){
-      let update = "set_letter|" + square + "|" + newText;
+    function changeText(square, newText, checked=0){
+      let update = "set_letter|" + square + "|" + newText + "|" + checked;
       window.channel.push("call_in", {call: update});
 
-      changeTextVis(square, newText);
+      changeTextVis(square, newText, checked);
     }
 
     function updateClue(){

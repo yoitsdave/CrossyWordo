@@ -13,11 +13,14 @@ defmodule Crossywordo.Board do
   end
 
   # start_board.board tuples are maps with values
-  # "current", "ans", "across_num", "down_num", "label", "circled"
+  # "current", "ans", "across_num", "down_num", "label", "circled", "checked"
+
+  # to save memory, this is tagged as follows:
+  # "c", "n", "a", "d", "l", "s", "h"
 
   # filled blocks have the following predefined values:
   # {"current": ".", ans": ".", "across_num": null, "down_num": null,
-  #  "label": -1, "circled": false}
+  #  "label": -1, "circled": false, "checked": 0}
 
   # also note - board is a tuple to facilitate easy access and due to
   # its fixed size
@@ -86,7 +89,8 @@ defmodule Crossywordo.Board do
     {:reply, :ok, board}
   end
 
-  def set_letter([square_num, val], {from_pid, term}, board) do
+  def set_letter([square_num, val, checked], {from_pid, term}, board) do
+    IO.puts checked
     if String.length(val) < 16 and
       not String.contains?(val, ["."]) and
       String.printable?(val) do
@@ -98,10 +102,13 @@ defmodule Crossywordo.Board do
                                     fn square ->
                                       square |>
                                       Map.update!("current", fn _x -> val
-                                                                      end)
+                                                             end) |>
+                                      Map.update!("checked", fn _x -> checked
+                                                             end)
+
                                     end)
                                   end)
-        send(from_pid, "update:"<> Poison.encode! [square_num, val])
+        send(from_pid, "update:"<> Poison.encode! [square_num, val, checked])
         {:reply, :ok, new_board}
     else
       failed_call([square_num, val], {from_pid, term}, board)
