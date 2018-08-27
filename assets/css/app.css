@@ -155,6 +155,10 @@ button[type=button] {
   color: red;
 }
 
+.revealed {
+  color: #ebf442;
+}
+
 .osk {
     position: absolute;
     bottom: 0;

@@ -48,7 +48,7 @@ defmodule Crossywordo.Board do
                 <> "/boards/#{file_name}.json.puz",
                 Map.delete(board, "room") |>
                 Poison.encode!())
-    reason
+    {:ok, reason}
   end
 
   @impl true
@@ -90,7 +90,6 @@ defmodule Crossywordo.Board do
   end
 
   def set_letter([square_num, val, checked], {from_pid, term}, board) do
-    IO.puts checked
     if String.length(val) < 16 and
       not String.contains?(val, ["."]) and
       String.printable?(val) do
@@ -101,9 +100,9 @@ defmodule Crossywordo.Board do
                                     List.update_at(String.to_integer(square_num),
                                     fn square ->
                                       square |>
-                                      Map.update!("current", fn _x -> val
+                                      Map.update!("c", fn _x -> val
                                                              end) |>
-                                      Map.update!("checked", fn _x -> checked
+                                      Map.update!("h", fn _x -> checked
                                                              end)
 
                                     end)

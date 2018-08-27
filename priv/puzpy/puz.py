@@ -748,8 +748,8 @@ if __name__ == "__main__":
         counter += 1
 
     loaded_nums = loaded_puz.clue_numbering()
-    board = [{'current': '.', 'ans': ans, 'across_num': None, 'down_num': None,
-              'label': -1, 'circled': False, 'checked': '0'} for ans in loaded_puz.solution]
+    board = [{'c': '.', 'n': ans, 'a': None, 'd': None,
+              'l': -1, 's': False, 'h': '0'} for ans in loaded_puz.solution]
 
     acrosses = []
     for clue in loaded_nums.across:
@@ -757,13 +757,13 @@ if __name__ == "__main__":
         acrosses.append([clue['num'], clue['clue']])
 
         #set label of first cell
-        board[clue['cell']]['label'] = clue['num']
+        board[clue['cell']]['l'] = clue['num']
 
         #set relevant clue of all affected squares
         affected = range(clue['cell'], clue['cell']+clue['len'])
         for cell_num in affected:
-            board[cell_num]['across_num'] = clue['num']
-            board[cell_num]['current'] = " "
+            board[cell_num]['a'] = clue['num']
+            board[cell_num]['c'] = " "
 
     downs = []
     for clue in loaded_nums.down:
@@ -771,14 +771,14 @@ if __name__ == "__main__":
         downs.append([clue['num'], clue['clue']])
 
         #set num of first cell
-        board[clue['cell']]['label'] = clue['num']
+        board[clue['cell']]['l'] = clue['num']
 
         #set relevant clue of all affected squares
         affected = range(clue['cell'], clue['cell']+(loaded_puz.width*clue['len']),
                          loaded_puz.width)
         for cell_num in affected:
-            board[cell_num]['down_num'] = clue['num']
-            board[cell_num]['current'] = " "
+            board[cell_num]['d'] = clue['num']
+            board[cell_num]['c'] = " "
 
     if loaded_puz.has_rebus():
         loaded_rebus = loaded_puz.rebus()

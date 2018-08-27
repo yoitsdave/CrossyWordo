@@ -166,7 +166,23 @@ export var App = {
 
     function takeStates(states) {
       if (!window.board_set) {
-        window.states = JSON.parse(states.contents.join(":"));
+        window.states = [];
+        let tempStates = JSON.parse(states.contents.join(":"));
+        let i = 0;
+        for (let state of tempStates) {
+          console.log(state);
+
+          window.states[i] = new Map();
+          window.states[i].current = state.c;
+          window.states[i].ans = state.n;
+          window.states[i].across_clue = state.a;
+          window.states[i].down_clue = state.d;
+          window.states[i].label = state.l;
+          window.states[i].circled = state.s;
+          window.states[i].checked = state.h;
+
+          i++;
+        }
         fillBoard();
         window.pointer = toggleSquare(getNext(-1, 1));
         window.direction = "across";
@@ -521,8 +537,8 @@ export var App = {
       } else if (checkedstate === "1") {
         checked[1] = window.states[number].ans === window.states[number].current?
                      "correct" : "incorrect"
-      } else if (checkedstate === "2") { //FIXME add revealed color
-        checked[1] = "unchecked";
+      } else if (checkedstate === "2") {
+        checked[1] = "revealed";
       }
       square.className = checked.join(" ");
     	square.insertAdjacentElement("beforeend", contents);
