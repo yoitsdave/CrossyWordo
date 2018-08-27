@@ -2,8 +2,6 @@ defmodule Crossywordo.Board do
   use GenServer
 
   def start_link(%{:name => board_name} = args) do
-    IO.puts "call_for" <> board_name
-
     case GenServer.start_link(__MODULE__, args, name: board_name) do
       {:ok, pid} -> {:ok, pid}
       {:error, {:already_started, pid}} -> {:ok, pid}
