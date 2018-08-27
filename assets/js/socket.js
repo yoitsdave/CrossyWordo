@@ -9,8 +9,12 @@ export var App = {
     function handleRebus() {
       let rebussed = prompt("Enter:").toUpperCase();
 
-      changeText(window.pointer, rebussed);
-      seekNext();
+      if (rebussed.length < 16 & !rebussed.includes("|") & !rebussed.includes(".")) {
+        changeText(window.pointer, rebussed);
+        seekNext();
+      } else {
+        alert("invalid rebus")
+      }
     }
 
     function boardFinishedCorrectly() {

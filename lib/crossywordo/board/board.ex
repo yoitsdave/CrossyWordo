@@ -86,21 +86,26 @@ defmodule Crossywordo.Board do
     {:reply, :ok, board}
   end
 
-  def set_letter([square_num, val], {from_pid, _term}, board) do
-    new_board = Map.update!(board, "board",
-                              fn old_board ->
-                                old_board |>
-                                List.update_at(String.to_integer(square_num),
-                                fn square ->
-                                  square |>
-                                  Map.update!("current", fn _x -> val |>
-                                                                  String.slice(
-                                                                    0..16)
-                                                                  end)
-                                end)
-                              end)
-    send(from_pid, "update:"<> Poison.encode! [square_num, val])
-    {:reply, :ok, new_board}
+  def set_letter([square_num, val], {from_pid, term}, board) do
+    if String.length(val) < 16 and
+      not String.contains?(val, ["."]) and
+      String.printable?(val) do
+
+        new_board = Map.update!(board, "board",
+                                  fn old_board ->
+                                    old_board |>
+                                    List.update_at(String.to_integer(square_num),
+                                    fn square ->
+                                      square |>
+                                      Map.update!("current", fn _x -> val
+                                                                      end)
+                                    end)
+                                  end)
+        send(from_pid, "update:"<> Poison.encode! [square_num, val])
+        {:reply, :ok, new_board}
+    else
+      failed_call([square_num, val], {from_pid, term}, board)
+    end
   end
 
   def failed_call(call_data, {from_pid, _term}, board) do
