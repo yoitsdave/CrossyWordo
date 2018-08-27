@@ -44,6 +44,7 @@ defmodule Crossywordo.Mixfile do
 
       {:arc, "~> 0.10.0"},
       {:distillery, "~> 1.0.0"},
+      {:guardian, "~> 0.14"}, 
       {:libcluster, "~> 2.0.3"},
     ]
   end

@@ -1,5 +1,6 @@
 defmodule CrossywordoWeb.BoardChannel do
   use Phoenix.Channel
+  use Guardian.Phoenix.Socket
 
   @impl true
   def join(board_name, %{"name" => display_name}, socket) do
