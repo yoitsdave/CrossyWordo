@@ -170,13 +170,11 @@ export var App = {
         let tempStates = JSON.parse(states.contents.join(":"));
         let i = 0;
         for (let state of tempStates) {
-          console.log(state);
-
           window.states[i] = new Map();
           window.states[i].current = state.c;
           window.states[i].ans = state.n;
-          window.states[i].across_clue = state.a;
-          window.states[i].down_clue = state.d;
+          window.states[i].across_num = state.a;
+          window.states[i].down_num = state.d;
           window.states[i].label = state.l;
           window.states[i].circled = state.s;
           window.states[i].checked = state.h;
