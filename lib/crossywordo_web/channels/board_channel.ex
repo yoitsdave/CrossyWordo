@@ -3,7 +3,6 @@ defmodule CrossywordoWeb.BoardChannel do
 
   @impl true
   def join(board_name, %{"name" => display_name}, socket) do
-    IO.puts("got call for board " <> board_name)
     {:ok, _my_board_pid} = Crossywordo.Board.start_link(%{name: {:global, board_name}})
     {:ok, socket |> assign(:display_name, display_name)}
   end
