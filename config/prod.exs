@@ -34,7 +34,7 @@ config :crossywordo, Crossywordo.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: {:system, "DATABASE_URL"},
   database: "postgres",
-  ssl: false,
+  ssl: true,
   pool_size: 1
 
 
