@@ -53,6 +53,6 @@ config :crossywordo, Crossywordo.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
   password: "postgres",
-  database: "crossywordo_dev",
+  database: "crossywordo",
   hostname: "localhost",
   pool_size: 10

@@ -29,6 +29,15 @@ config :libcluster,
         kubernetes_node_basename: "${LIBCLUSTER_KUBERNETES_NODE_BASENAME}"]]]
 
 
+# Configure your database
+config :crossywordo, Crossywordo.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  url: {:system, "DATABASE_URL"},
+  database: "postgres",
+  ssl: false,
+  pool_size: 1
+
+
 # Do not print debug messages in production
 config :logger, level: :info
 

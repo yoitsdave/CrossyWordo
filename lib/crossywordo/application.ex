@@ -12,8 +12,9 @@ defmodule Crossywordo.Application do
       # supervisor(Crossywordo.Repo, []),
       # Start the endpoint when the application starts
       supervisor(CrossywordoWeb.Endpoint, []),
+      supervisor(Crossywordo.Repo, [])
     ]
-    
+
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Crossywordo.Supervisor]
