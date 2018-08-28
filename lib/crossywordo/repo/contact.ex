@@ -4,10 +4,10 @@ defmodule Crossywordo.Contact do
 
   @primary_key false
   schema "contacts" do
-    field :status, :integer
 
-    belongs_to :user, Crossywordo.User, primary_key: true
-    belongs_to :contact, Crossywordo.User, primary_key: true
+    field :status, :integer
+    belongs_to :follower, Crossywordo.User, references: :uname, type: :string, primary_key: true
+    belongs_to :following,Crossywordo.User, references: :uname, type: :string, primary_key: true
 
     timestamps()
   end
@@ -15,7 +15,7 @@ defmodule Crossywordo.Contact do
   @doc false
   def changeset(contact, attrs) do
     contact
-    |> cast(attrs, [:user, :contact, :status])
-    |> validate_required([:user, :contact, :status])
+    |> cast(attrs, [:follower, :following, :status])
+    |> validate_required([:follower, :following, :status])
   end
 end
