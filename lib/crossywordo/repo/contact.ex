@@ -4,6 +4,8 @@ defmodule Crossywordo.Contact do
 
 
   schema "contacts" do
+    field :status, :integer
+
     belongs_to :user, Crossywordo.User
     belongs_to :contact, Crossywordo.User
 
@@ -13,7 +15,7 @@ defmodule Crossywordo.Contact do
   @doc false
   def changeset(contact, attrs) do
     contact
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:user, :contact, :status])
+    |> validate_required([:user, :contact, :status])
   end
 end

@@ -19,7 +19,7 @@ defmodule Crossywordo.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :email, :tier])
+    |> cast(attrs, [:name, :email, :tier, :reset_to_free, :oauth_token, :contacts])
     |> validate_required([:name, :email, :tier])
   end
 end
